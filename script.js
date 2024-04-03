@@ -34,9 +34,21 @@ function createPokemonElement(pokemon) {
   imageElement.src = pokemon.picture;
   imageElement.alt = `Picture of the pokemon ${pokemon.name}`;
 
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "Delete";
+
+  const saveButton = document.createElement("button");
+  saveButton.textContent = "Save";
+
+  const editButton = document.createElement("button");
+  editButton.textContent = "Edit";
+
   pokemonContainer.appendChild(nameElement);
   pokemonContainer.appendChild(typeElement);
   pokemonContainer.appendChild(imageElement);
+  pokemonContainer.appendChild(editButton);
+  pokemonContainer.appendChild(saveButton);
+  pokemonContainer.appendChild(deleteButton);
 
   container.appendChild(pokemonContainer);
 }
