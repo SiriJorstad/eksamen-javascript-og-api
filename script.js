@@ -59,149 +59,152 @@ function createPokemonElement(pokemon) {
 
 document.body.appendChild(container);
 
-//Filtreringsknapper
-const bugButton = document.createElement("button");
-bugButton.textContent = "Bug";
+//Filtreringsknapper med fargekoder
+const bugButton = document.createElement("img");
+bugButton.src = "/assets/bug.webp";
 container.appendChild(bugButton);
 bugButton.onclick = function () {
-  filterPokemons("bug");
+  filterPokemons("bug", "#91a019");
 };
 
-const darkButton = document.createElement("button");
-darkButton.textContent = "Dark";
+const darkButton = document.createElement("img");
+darkButton.src = "/assets/dark.webp";
 container.appendChild(darkButton);
 darkButton.onclick = function () {
-  filterPokemons("dark");
+  filterPokemons("dark", "#282828");
 };
 
-const dragonButton = document.createElement("button");
-dragonButton.textContent = "Dragon";
-container.appendChild(darkButton);
+const dragonButton = document.createElement("img");
+dragonButton.src = "/assets/dragon.webp";
+container.appendChild(dragonButton);
 dragonButton.onclick = function () {
-  filterPokemons("dragon");
+  filterPokemons("dragon", "#5061e1");
 };
 
-const electricButton = document.createElement("button");
-electricButton.textContent = "Electric";
+const electricButton = document.createElement("img");
+electricButton.src = "/assets/electric.webp";
 container.appendChild(electricButton);
 electricButton.onclick = function () {
-  filterPokemons("electric");
+  filterPokemons("electric", "#fac006");
 };
 
-const fairyButton = document.createElement("button");
-fairyButton.textContent = "Fairy";
+const fairyButton = document.createElement("img");
+fairyButton.src = "/assets/fairy.webp";
 container.appendChild(fairyButton);
 fairyButton.onclick = function () {
-  filterPokemons("fairy");
+  filterPokemons("fairy", "#f170f1");
 };
 
-const fightingButton = document.createElement("button");
-fightingButton.textContent = "Fighting";
+const fightingButton = document.createElement("img");
+fightingButton.src = "/assets/fighting.webp";
 container.appendChild(fightingButton);
 fightingButton.onclick = function () {
-  filterPokemons("fighting");
+  filterPokemons("fighting", "#ff8006");
 };
 
-const fireButton = document.createElement("button");
-fireButton.textContent = "Fire";
+const fireButton = document.createElement("img");
+fireButton.src = "/assets/fire.webp";
 container.appendChild(fireButton);
 fireButton.onclick = function () {
-  filterPokemons("fire");
+  filterPokemons("fire", "#e7282b");
 };
 
-const flyingButton = document.createElement("button");
-flyingButton.textContent = "Flying";
+const flyingButton = document.createElement("img");
+flyingButton.src = "/assets/flying.webp";
 container.appendChild(flyingButton);
 flyingButton.onclick = function () {
-  filterPokemons("flying");
+  filterPokemons("flying", "#81baef");
 };
 
-const ghostButton = document.createElement("button");
-ghostButton.textContent = "Ghost";
+//hvor er ghost button??
+const ghostButton = document.createElement("img");
+ghostButton.src = "/assets/ghost.webp";
 container.appendChild(ghostButton);
 ghostButton.onclick = function () {
-  filterPokemons("ghost");
+  filterPokemons("ghost", "#714170");
 };
 
-const grassButton = document.createElement("button");
-grassButton.textContent = "Grass";
+const grassButton = document.createElement("img");
+grassButton.src = "/assets/grass.webp";
 container.appendChild(grassButton);
 grassButton.onclick = function () {
-  filterPokemons("grass");
+  filterPokemons("grass", "#41a129");
 };
 
-const groundButton = document.createElement("button");
-groundButton.textContent = "Ground";
+const groundButton = document.createElement("img");
+groundButton.src = "/assets/ground.webp";
 container.appendChild(groundButton);
 groundButton.onclick = function () {
-  filterPokemons("ground");
+  filterPokemons("ground", "#915120");
 };
 
-const iceButton = document.createElement("button");
-iceButton.textContent = "Ice";
+const iceButton = document.createElement("img");
+iceButton.src = "/assets/ice.webp";
 container.appendChild(iceButton);
 iceButton.onclick = function () {
-  filterPokemons("ice");
+  filterPokemons("ice", "#3ed8ff");
 };
 
-const normalButton = document.createElement("button");
-normalButton.textContent = "Normal";
+const normalButton = document.createElement("img");
+normalButton.src = "/assets/normal.webp";
 container.appendChild(normalButton);
 normalButton.onclick = function () {
-  filterPokemons("normal");
+  filterPokemons("normal", "#9fa19f");
 };
 
-const poisonButton = document.createElement("button");
-poisonButton.textContent = "Poison";
+const poisonButton = document.createElement("img");
+poisonButton.src = "/assets/poison.webp";
 container.appendChild(poisonButton);
 poisonButton.onclick = function () {
-  filterPokemons("poison");
+  filterPokemons("poison", "#9040cc");
 };
 
-const psychicButton = document.createElement("button");
-psychicButton.textContent = "Psychic";
+const psychicButton = document.createElement("img");
+psychicButton.src = "/assets/psychic.webp";
 container.appendChild(psychicButton);
 psychicButton.onclick = function () {
-  filterPokemons("psychic");
+  filterPokemons("psychic", "#ef4077");
 };
 
-const rockButton = document.createElement("button");
-rockButton.textContent = "Rock";
+const rockButton = document.createElement("img");
+rockButton.src = "/assets/rock.webp";
 container.appendChild(rockButton);
 rockButton.onclick = function () {
-  filterPokemons("rock");
+  filterPokemons("rock", "#afa981");
 };
 
-const steelButton = document.createElement("button");
-steelButton.textContent = "Steel";
+const steelButton = document.createElement("img");
+steelButton.src = "/assets/steel.webp";
 container.appendChild(steelButton);
 steelButton.onclick = function () {
-  filterPokemons("steel");
+  filterPokemons("steel", "#60a1b8"); 
 };
 
-const waterButton = document.createElement("button");
-waterButton.textContent = "Water";
+const waterButton = document.createElement("img");
+waterButton.src = "/assets/water.webp";
 container.appendChild(waterButton);
 waterButton.onclick = function () {
-  filterPokemons("water");
+  filterPokemons("water", "#2980ef");
 };
 
 const allButton = document.createElement("button");
-allButton.textContent = "All pokemons";
+allButton.textContent = "ALL POKEMONS";
+allButton.style.backgroundColor = "white";
+allButton.style.borderRadius = "1cm";
 container.appendChild(allButton);
 allButton.onclick = function () {
-  filterPokemons("");
+  filterPokemons(""); 
 };
 
-//de andre filterne nedover
 
 //Henter element-klassenavn som array og filtreringsfunskjon
 const pokemonElements = document.getElementsByClassName("pokemon-div");
-function filterPokemons(filter) {
+function filterPokemons(filter, color) {
   // Går gjennom hvert element og søker etter om type er det samme som "filter"
   for (let i = 0; i < pokemonElements.length; i++) {
     if (pokemonElements[i].querySelector("p").innerHTML.includes(filter)) {
-      pokemonElements[i].style.display = "block";
+      pokemonElements[i].style.display = "block"
+      pokemonElements[i].style.backgroundColor = color
     } else {
       pokemonElements[i].style.display = "none";
     }
