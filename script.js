@@ -152,8 +152,7 @@ function createFilterButtons() {
 
   const allButton = document.createElement("button");
   allButton.textContent = "ALL POKEMONS";
-  allButton.style.backgroundColor = "white";
-  allButton.style.borderRadius = "100px";
+  allButton.style.cssText = "background-color: white; border-radius: 100px;";
   filterButtonsContainer.appendChild(allButton);
   allButton.onclick = function () {
     filterPokemons("");
@@ -165,9 +164,8 @@ function createFilterButtons() {
 //Lag egen pokemon knapp
 const createPokemon = document.createElement("button");
 createPokemon.textContent = "ADD YOUR OWN POKEMON";
-createPokemon.style.backgroundColor = "white";
-createPokemon.style.borderRadius = "100px";
-createPokemon.style.fontSize = "18px";
+createPokemon.style.cssText =
+  "background-color: white; border-radius: 100px; font-size: 18px;";
 document.body.appendChild(createPokemon);
 
 //Lag egen pokemon
@@ -214,12 +212,8 @@ async function getPokemons() {
 function createPokemonElement(pokemon) {
   const pokemonContainer = document.createElement("div");
   pokemonContainer.classList.add("pokemon-div");
-  pokemonContainer.style.border = "1px solid black";
-  pokemonContainer.style.width = "250px";
-  pokemonContainer.style.display = "inline-block";
-  pokemonContainer.style.margin = "10px";
-  pokemonContainer.style.padding = "10px";
-  pokemonContainer.style.borderRadius = "10px";
+  pokemonContainer.style.cssText =
+    "border: 1px solid black; width: 250px; display: inline-block; margin: 10px; padding: 10px; border-radius: 10px;";
 
   const nameElement = document.createElement("h2");
   nameElement.textContent = pokemon.name.toUpperCase();
@@ -269,7 +263,7 @@ function createPokemonElement(pokemon) {
       typeElement.textContent = changeType.toLowerCase();
       pokemon.type = changeType.toLowerCase();
     }
-    
+
     updateSavedPokemons();
   });
 
@@ -321,9 +315,13 @@ function updateSavedPokemons() {
 
   savedPokemons.forEach((savedPokemon, i) => {
     const savedPokemonElement = document.createElement("div");
-    savedPokemonElement.style.border = "1px solid black";
-    savedPokemonElement.innerHTML = `<img src="${savedPokemon.picture}" alt="${savedPokemon.name}"/>
-  <p>${savedPokemon.name}</p>
+    savedPokemonElement.style.cssText =
+      "border: 1px solid black; margin: 10px; width: 150px; border-radius: 10px; background-color: #f2e7ff; display: flex; flex-direction: column; align-items: center;";
+
+    savedPokemonElement.innerHTML = `<img src="${savedPokemon.picture}" alt="${
+      savedPokemon.name
+    }"/>
+  <p>${savedPokemon.name.toUpperCase()}</p>
   <p>${savedPokemon.type}</p>
   <button onclick="deletePokemon('${savedPokemon.name}')">Slett</button>`;
 
@@ -358,13 +356,13 @@ function filterPokemons(filter, color) {
 }
 
 //Container for lagrede pokemons
-const savedPokemonsText = document.createElement("p");
+const savedPokemonsText = document.createElement("h2");
 savedPokemonsText.textContent = "Dine lagrede pokemons:";
 document.body.appendChild(savedPokemonsText);
 
 const savedPokemonsContainer = document.createElement("div");
-savedPokemonsContainer.style.border = "1px solid black";
-savedPokemonsContainer.style.width = "500px";
+savedPokemonsContainer.style.cssText =
+  "border: 1px solid black; width: 100%; display: flex;";
 document.body.appendChild(savedPokemonsContainer);
 
 //Starte funksjon for å oppdatere lagrede pokemons
