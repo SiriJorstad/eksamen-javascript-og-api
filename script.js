@@ -178,7 +178,7 @@ createPokemon.addEventListener("click", function () {
   const userPokemonType = prompt("Hva slags type skal pokemonen være?");
   const userCreatedPokemon = {
     name: userPokemonName,
-    type: userPokemonType,
+    type: userPokemonType.toLowerCase(),
     picture: "/assets/new-pokemon.gif",
   };
 
@@ -248,13 +248,29 @@ function createPokemonElement(pokemon) {
   });
   //Redigeringsfunksjon
   editButton.addEventListener("click", function () {
-    const nameInput = document.createElement("input");
-    nameInput.value = nameElement.textContent;
-    nameElement.replaceWith(nameInput);
+    const changeName = prompt("Endre navn", pokemon.name);
+    const changeType = prompt("Endre type", pokemon.type);
 
-    const typeInput = document.createElement("input");
-    typeInput.value = typeElement.textContent;
-    typeElement.replaceWith(typeInput);
+    if (changeName !== "") {
+      for (let i = 0; i < savedPokemons.length; i++) {
+        if (savedPokemons[i].name == pokemon.name) {
+          savedPokemons[i].name = changeName;
+        }
+      }
+      nameElement.textContent = changeName.toUpperCase();
+      pokemon.name = changeName;
+    }
+    if (changeType !== "") {
+      for (let i = 0; i < savedPokemons.length; i++) {
+        if (savedPokemons[i].name == pokemon.name) {
+          savedPokemons[i].type = changeType;
+        }
+      }
+      typeElement.textContent = changeType.toLowerCase();
+      pokemon.type = changeType.toLowerCase();
+    }
+    
+    updateSavedPokemons();
   });
 
   //Lagre i local storage
