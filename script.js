@@ -1,6 +1,3 @@
-const allPokemons = [];
-const typeFilter = [];
-
 //Hente ut pokemons fra API
 getPokemons();
 
@@ -46,6 +43,11 @@ function createPokemonElement(pokemon) {
 
   const editButton = document.createElement("button");
   editButton.textContent = "Edit";
+
+  //Slettefunksjon
+  deleteButton.addEventListener("click", function () {
+    pokemonContainer.remove();
+  });
 
   pokemonContainer.appendChild(nameElement);
   pokemonContainer.appendChild(typeElement);
@@ -116,7 +118,6 @@ flyingButton.onclick = function () {
   filterPokemons("flying", "#81baef");
 };
 
-//hvor er ghost button??
 const ghostButton = document.createElement("img");
 ghostButton.src = "/assets/ghost.webp";
 container.appendChild(ghostButton);
