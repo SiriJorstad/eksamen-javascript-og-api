@@ -1,3 +1,5 @@
+let savedPokemons = [];
+
 //Hente ut pokemons fra API
 getPokemons();
 
@@ -24,9 +26,11 @@ const container = document.createElement("div");
 function createPokemonElement(pokemon) {
   const pokemonContainer = document.createElement("div");
   pokemonContainer.classList.add("pokemon-div");
+  pokemonContainer.style.border = "1px solid black";
+  pokemonContainer.style.width = "250px";
 
   const nameElement = document.createElement("h2");
-  nameElement.textContent = pokemon.name;
+  nameElement.textContent = pokemon.name.toUpperCase();
 
   const typeElement = document.createElement("p");
   typeElement.textContent = pokemon.type;
@@ -48,6 +52,40 @@ function createPokemonElement(pokemon) {
   deleteButton.addEventListener("click", function () {
     pokemonContainer.remove();
   });
+  //Redigeringsfunksjon
+  editButton.addEventListener("click", function () {
+    const nameInput = document.createElement("input");
+    nameInput.value = nameElement.textContent;
+    nameElement.replaceWith(nameInput);
+
+    const typeInput = document.createElement("input");
+    typeInput.value = typeElement.textContent;
+    typeElement.replaceWith(typeInput);
+  });
+
+  //Lagre i local storage
+  saveButton.addEventListener("click", function () {
+    if (savedPokemons.length < 5) {
+      let pokemonExist = false;
+      for (let i = 0; i < savedPokemons.length; i++) {
+        if (savedPokemons[i].name.includes(pokemon.name)) {
+          alert("Du har allerede lagret denne pokemonen!");
+          pokemonExist = true;
+        }
+      }
+      if (pokemonExist == false) {
+        savedPokemons.push({
+          name: pokemon.name,
+          type: pokemon.type,
+          picture: pokemon.picture,
+        });
+
+        localStorage.setItem("savedPokemons", JSON.stringify(savedPokemons));
+      }
+    } else {
+      alert("You can't save more than 5 Pokemons :-( ");
+    }
+  });
 
   pokemonContainer.appendChild(nameElement);
   pokemonContainer.appendChild(typeElement);
@@ -60,6 +98,17 @@ function createPokemonElement(pokemon) {
 }
 
 document.body.appendChild(container);
+
+//Lagrede pokemons container, MAKS 5 stk
+const savedPokemonsContainer = document.createElement("div");
+savedPokemonsContainer.style.border = "1px solid black";
+savedPokemonsContainer.style.width = "500px";
+
+const savedPokemonsText = document.createElement("p");
+savedPokemonsText.textContent = "Dine lagrede pokemons:";
+
+savedPokemonsContainer.appendChild(savedPokemonsText);
+document.body.appendChild(savedPokemonsContainer);
 
 //Filtreringsknapper med fargekoder
 const bugButton = document.createElement("img");
