@@ -171,7 +171,6 @@ async function getPokemons() {
 //Legge til pokemons i HTML
 const container = document.createElement("div");
 
-
 function createPokemonElement(pokemon) {
   const pokemonContainer = document.createElement("div");
   pokemonContainer.classList.add("pokemon-div");
@@ -181,8 +180,6 @@ function createPokemonElement(pokemon) {
   pokemonContainer.style.margin = "10px";
   pokemonContainer.style.padding = "10px";
   pokemonContainer.style.borderRadius = "10px";
-
-
 
   const nameElement = document.createElement("h2");
   nameElement.textContent = pokemon.name.toUpperCase();
@@ -206,6 +203,7 @@ function createPokemonElement(pokemon) {
   //Slettefunksjon
   deleteButton.addEventListener("click", function () {
     pokemonContainer.remove();
+    deletePokemon(pokemon);
   });
   //Redigeringsfunksjon
   editButton.addEventListener("click", function () {
@@ -217,8 +215,6 @@ function createPokemonElement(pokemon) {
     typeInput.value = typeElement.textContent;
     typeElement.replaceWith(typeInput);
   });
-
-
 
   //Lagre i local storage
   saveButton.addEventListener("click", function () {
@@ -254,25 +250,31 @@ function savePokemon(pokemon) {
       });
 
       updateSavedPokemons();
-      localStorage.setItem("savedPokemons", JSON.stringify(savedPokemons));
     }
   } else {
-    alert("You can't save more than 5 Pokemons :-( ");
+    alert(
+      "You can't save more than 5 Pokemons :-( Delete pokemons to get more space."
+    );
   }
 }
 
 //Funksjon som oppdaterer lagrede pokemons
 function updateSavedPokemons() {
+
+  savedPokemonsContainer.innerHTML = "";
+
   savedPokemons.forEach((savedPokemon, i) => {
     const savedPokemonElement = document.createElement("div");
+    savedPokemonElement.style.border = "1px solid black";
     savedPokemonElement.innerHTML = `<img src="${savedPokemon.picture}" alt="${savedPokemon.name}"/>
   <p>${savedPokemon.name}</p>
   <p>${savedPokemon.type}</p>`;
+
     savedPokemonsContainer.appendChild(savedPokemonElement);
   });
+  localStorage.setItem("savedPokemons", JSON.stringify(savedPokemons));
+
 }
-
-
 
 //Henter element-klassenavn som array og filtreringsfunskjon
 const pokemonElements = document.getElementsByClassName("pokemon-div");
@@ -298,19 +300,34 @@ function filterPokemons(filter, color) {
 //Starte funksjon for å oppdatere lagrede pokemons
 
 //Container for lagrede pokemons
+const savedPokemonsText = document.createElement("p");
+savedPokemonsText.textContent = "Dine lagrede pokemons:";
+document.body.appendChild(savedPokemonsText);
+
 const savedPokemonsContainer = document.createElement("div");
 savedPokemonsContainer.style.border = "1px solid black";
 savedPokemonsContainer.style.width = "500px";
-
-const savedPokemonsText = document.createElement("p");
-savedPokemonsText.textContent = "Dine lagrede pokemons:";
-savedPokemonsContainer.appendChild(savedPokemonsText);
 document.body.appendChild(savedPokemonsContainer);
+
 
 updateSavedPokemons();
 
- //Melding hvis det ikke finnes pokemons av en type
- const showMessageNoPokemon = document.createElement("h2");
- showMessageNoPokemon.textContent = "Couldn't Catch 'Em All. No pokemons of this type";
- showMessageNoPokemon.style.display = "none";
- container.appendChild(showMessageNoPokemon)
+//Slettefunksjon for pokemons i oversikten
+function deletePokemon(pokemon) {
+  for (let i = 0; i < savedPokemons.length; i++) {
+    if (savedPokemons[i].name == pokemon.name) {
+      savedPokemons.splice(i, 1);
+    }
+    
+  }
+  updateSavedPokemons()
+}
+
+//Slettefunksjon for lagrede pokemons
+
+//Melding hvis det ikke finnes pokemons av en type
+const showMessageNoPokemon = document.createElement("h2");
+showMessageNoPokemon.textContent =
+  "Couldn't Catch 'Em All. No pokemons of this type";
+showMessageNoPokemon.style.display = "none";
+container.appendChild(showMessageNoPokemon);
