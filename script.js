@@ -1,4 +1,152 @@
-let savedPokemons = [];
+// Hente inn lagrede pokemons fra localStorage
+let savedPokemons;
+if (JSON.parse(localStorage.getItem("savedPokemons"))) {
+  savedPokemons = JSON.parse(localStorage.getItem("savedPokemons"));
+} else {
+  savedPokemons = [];
+}
+
+//Filtreringsknapper med fargekoder
+createFilterButtons();
+
+function createFilterButtons() {
+  const filterButtonsContainer = document.createElement("div");
+  const bugButton = document.createElement("img");
+  bugButton.src = "/assets/bug.webp";
+  filterButtonsContainer.appendChild(bugButton);
+  bugButton.onclick = function () {
+    filterPokemons("bug", "#91a019");
+  };
+
+  const darkButton = document.createElement("img");
+  darkButton.src = "/assets/dark.webp";
+  filterButtonsContainer.appendChild(darkButton);
+  darkButton.onclick = function () {
+    filterPokemons("dark", "#282828");
+  };
+
+  const dragonButton = document.createElement("img");
+  dragonButton.src = "/assets/dragon.webp";
+  filterButtonsContainer.appendChild(dragonButton);
+  dragonButton.onclick = function () {
+    filterPokemons("dragon", "#5061e1");
+  };
+
+  const electricButton = document.createElement("img");
+  electricButton.src = "/assets/electric.webp";
+  filterButtonsContainer.appendChild(electricButton);
+  electricButton.onclick = function () {
+    filterPokemons("electric", "#fac006");
+  };
+
+  const fairyButton = document.createElement("img");
+  fairyButton.src = "/assets/fairy.webp";
+  filterButtonsContainer.appendChild(fairyButton);
+  fairyButton.onclick = function () {
+    filterPokemons("fairy", "#f170f1");
+  };
+
+  const fightingButton = document.createElement("img");
+  fightingButton.src = "/assets/fighting.webp";
+  filterButtonsContainer.appendChild(fightingButton);
+  fightingButton.onclick = function () {
+    filterPokemons("fighting", "#ff8006");
+  };
+
+  const fireButton = document.createElement("img");
+  fireButton.src = "/assets/fire.webp";
+  filterButtonsContainer.appendChild(fireButton);
+  fireButton.onclick = function () {
+    filterPokemons("fire", "#e7282b");
+  };
+
+  const flyingButton = document.createElement("img");
+  flyingButton.src = "/assets/flying.webp";
+  filterButtonsContainer.appendChild(flyingButton);
+  flyingButton.onclick = function () {
+    filterPokemons("flying", "#81baef");
+  };
+
+  const ghostButton = document.createElement("img");
+  ghostButton.src = "/assets/ghost.webp";
+  filterButtonsContainer.appendChild(ghostButton);
+  ghostButton.onclick = function () {
+    filterPokemons("ghost", "#714170");
+  };
+
+  const grassButton = document.createElement("img");
+  grassButton.src = "/assets/grass.webp";
+  filterButtonsContainer.appendChild(grassButton);
+  grassButton.onclick = function () {
+    filterPokemons("grass", "#41a129");
+  };
+
+  const groundButton = document.createElement("img");
+  groundButton.src = "/assets/ground.webp";
+  filterButtonsContainer.appendChild(groundButton);
+  groundButton.onclick = function () {
+    filterPokemons("ground", "#915120");
+  };
+
+  const iceButton = document.createElement("img");
+  iceButton.src = "/assets/ice.webp";
+  filterButtonsContainer.appendChild(iceButton);
+  iceButton.onclick = function () {
+    filterPokemons("ice", "#3ed8ff");
+  };
+
+  const normalButton = document.createElement("img");
+  normalButton.src = "/assets/normal.webp";
+  filterButtonsContainer.appendChild(normalButton);
+  normalButton.onclick = function () {
+    filterPokemons("normal", "#9fa19f");
+  };
+
+  const poisonButton = document.createElement("img");
+  poisonButton.src = "/assets/poison.webp";
+  filterButtonsContainer.appendChild(poisonButton);
+  poisonButton.onclick = function () {
+    filterPokemons("poison", "#9040cc");
+  };
+
+  const psychicButton = document.createElement("img");
+  psychicButton.src = "/assets/psychic.webp";
+  filterButtonsContainer.appendChild(psychicButton);
+  psychicButton.onclick = function () {
+    filterPokemons("psychic", "#ef4077");
+  };
+
+  const rockButton = document.createElement("img");
+  rockButton.src = "/assets/rock.webp";
+  filterButtonsContainer.appendChild(rockButton);
+  rockButton.onclick = function () {
+    filterPokemons("rock", "#afa981");
+  };
+
+  const steelButton = document.createElement("img");
+  steelButton.src = "/assets/steel.webp";
+  filterButtonsContainer.appendChild(steelButton);
+  steelButton.onclick = function () {
+    filterPokemons("steel", "#60a1b8");
+  };
+
+  const waterButton = document.createElement("img");
+  waterButton.src = "/assets/water.webp";
+  filterButtonsContainer.appendChild(waterButton);
+  waterButton.onclick = function () {
+    filterPokemons("water", "#2980ef");
+  };
+
+  const allButton = document.createElement("button");
+  allButton.textContent = "ALL POKEMONS";
+  allButton.style.backgroundColor = "white";
+  allButton.style.borderRadius = "100px";
+  filterButtonsContainer.appendChild(allButton);
+  allButton.onclick = function () {
+    filterPokemons("");
+  };
+  document.body.appendChild(filterButtonsContainer);
+}
 
 //Hente ut pokemons fra API
 getPokemons();
@@ -23,11 +171,18 @@ async function getPokemons() {
 //Legge til pokemons i HTML
 const container = document.createElement("div");
 
+
 function createPokemonElement(pokemon) {
   const pokemonContainer = document.createElement("div");
   pokemonContainer.classList.add("pokemon-div");
   pokemonContainer.style.border = "1px solid black";
   pokemonContainer.style.width = "250px";
+  pokemonContainer.style.display = "inline-block";
+  pokemonContainer.style.margin = "10px";
+  pokemonContainer.style.padding = "10px";
+  pokemonContainer.style.borderRadius = "10px";
+
+
 
   const nameElement = document.createElement("h2");
   nameElement.textContent = pokemon.name.toUpperCase();
@@ -63,28 +218,11 @@ function createPokemonElement(pokemon) {
     typeElement.replaceWith(typeInput);
   });
 
+
+
   //Lagre i local storage
   saveButton.addEventListener("click", function () {
-    if (savedPokemons.length < 5) {
-      let pokemonExist = false;
-      for (let i = 0; i < savedPokemons.length; i++) {
-        if (savedPokemons[i].name.includes(pokemon.name)) {
-          alert("Du har allerede lagret denne pokemonen!");
-          pokemonExist = true;
-        }
-      }
-      if (pokemonExist == false) {
-        savedPokemons.push({
-          name: pokemon.name,
-          type: pokemon.type,
-          picture: pokemon.picture,
-        });
-
-        localStorage.setItem("savedPokemons", JSON.stringify(savedPokemons));
-      }
-    } else {
-      alert("You can't save more than 5 Pokemons :-( ");
-    }
+    savePokemon(pokemon);
   });
 
   pokemonContainer.appendChild(nameElement);
@@ -99,163 +237,80 @@ function createPokemonElement(pokemon) {
 
 document.body.appendChild(container);
 
-//Lagrede pokemons container, MAKS 5 stk
+function savePokemon(pokemon) {
+  if (savedPokemons.length < 5) {
+    let pokemonExist = false;
+    for (let i = 0; i < savedPokemons.length; i++) {
+      if (savedPokemons[i].name == pokemon.name) {
+        alert("Du har allerede lagret denne pokemonen!");
+        pokemonExist = true;
+      }
+    }
+    if (pokemonExist == false) {
+      savedPokemons.push({
+        name: pokemon.name,
+        type: pokemon.type,
+        picture: pokemon.picture,
+      });
+
+      updateSavedPokemons();
+      localStorage.setItem("savedPokemons", JSON.stringify(savedPokemons));
+    }
+  } else {
+    alert("You can't save more than 5 Pokemons :-( ");
+  }
+}
+
+//Funksjon som oppdaterer lagrede pokemons
+function updateSavedPokemons() {
+  savedPokemons.forEach((savedPokemon, i) => {
+    const savedPokemonElement = document.createElement("div");
+    savedPokemonElement.innerHTML = `<img src="${savedPokemon.picture}" alt="${savedPokemon.name}"/>
+  <p>${savedPokemon.name}</p>
+  <p>${savedPokemon.type}</p>`;
+    savedPokemonsContainer.appendChild(savedPokemonElement);
+  });
+}
+
+
+
+//Henter element-klassenavn som array og filtreringsfunskjon
+const pokemonElements = document.getElementsByClassName("pokemon-div");
+function filterPokemons(filter, color) {
+  // Går gjennom hvert element og søker etter om type er det samme som "filter"
+  let anyDisplayed = false;
+  for (let i = 0; i < pokemonElements.length; i++) {
+    if (pokemonElements[i].querySelector("p").innerHTML.includes(filter)) {
+      pokemonElements[i].style.display = "inline-block";
+      pokemonElements[i].style.backgroundColor = color;
+      anyDisplayed = true;
+    } else {
+      pokemonElements[i].style.display = "none";
+    }
+  }
+  if (anyDisplayed == false) {
+    showMessageNoPokemon.style.display = "block";
+  } else {
+    showMessageNoPokemon.style.display = "none";
+  }
+}
+
+//Starte funksjon for å oppdatere lagrede pokemons
+
+//Container for lagrede pokemons
 const savedPokemonsContainer = document.createElement("div");
 savedPokemonsContainer.style.border = "1px solid black";
 savedPokemonsContainer.style.width = "500px";
 
 const savedPokemonsText = document.createElement("p");
 savedPokemonsText.textContent = "Dine lagrede pokemons:";
-
 savedPokemonsContainer.appendChild(savedPokemonsText);
 document.body.appendChild(savedPokemonsContainer);
 
-//Filtreringsknapper med fargekoder
-const bugButton = document.createElement("img");
-bugButton.src = "/assets/bug.webp";
-container.appendChild(bugButton);
-bugButton.onclick = function () {
-  filterPokemons("bug", "#91a019");
-};
+updateSavedPokemons();
 
-const darkButton = document.createElement("img");
-darkButton.src = "/assets/dark.webp";
-container.appendChild(darkButton);
-darkButton.onclick = function () {
-  filterPokemons("dark", "#282828");
-};
-
-const dragonButton = document.createElement("img");
-dragonButton.src = "/assets/dragon.webp";
-container.appendChild(dragonButton);
-dragonButton.onclick = function () {
-  filterPokemons("dragon", "#5061e1");
-};
-
-const electricButton = document.createElement("img");
-electricButton.src = "/assets/electric.webp";
-container.appendChild(electricButton);
-electricButton.onclick = function () {
-  filterPokemons("electric", "#fac006");
-};
-
-const fairyButton = document.createElement("img");
-fairyButton.src = "/assets/fairy.webp";
-container.appendChild(fairyButton);
-fairyButton.onclick = function () {
-  filterPokemons("fairy", "#f170f1");
-};
-
-const fightingButton = document.createElement("img");
-fightingButton.src = "/assets/fighting.webp";
-container.appendChild(fightingButton);
-fightingButton.onclick = function () {
-  filterPokemons("fighting", "#ff8006");
-};
-
-const fireButton = document.createElement("img");
-fireButton.src = "/assets/fire.webp";
-container.appendChild(fireButton);
-fireButton.onclick = function () {
-  filterPokemons("fire", "#e7282b");
-};
-
-const flyingButton = document.createElement("img");
-flyingButton.src = "/assets/flying.webp";
-container.appendChild(flyingButton);
-flyingButton.onclick = function () {
-  filterPokemons("flying", "#81baef");
-};
-
-const ghostButton = document.createElement("img");
-ghostButton.src = "/assets/ghost.webp";
-container.appendChild(ghostButton);
-ghostButton.onclick = function () {
-  filterPokemons("ghost", "#714170");
-};
-
-const grassButton = document.createElement("img");
-grassButton.src = "/assets/grass.webp";
-container.appendChild(grassButton);
-grassButton.onclick = function () {
-  filterPokemons("grass", "#41a129");
-};
-
-const groundButton = document.createElement("img");
-groundButton.src = "/assets/ground.webp";
-container.appendChild(groundButton);
-groundButton.onclick = function () {
-  filterPokemons("ground", "#915120");
-};
-
-const iceButton = document.createElement("img");
-iceButton.src = "/assets/ice.webp";
-container.appendChild(iceButton);
-iceButton.onclick = function () {
-  filterPokemons("ice", "#3ed8ff");
-};
-
-const normalButton = document.createElement("img");
-normalButton.src = "/assets/normal.webp";
-container.appendChild(normalButton);
-normalButton.onclick = function () {
-  filterPokemons("normal", "#9fa19f");
-};
-
-const poisonButton = document.createElement("img");
-poisonButton.src = "/assets/poison.webp";
-container.appendChild(poisonButton);
-poisonButton.onclick = function () {
-  filterPokemons("poison", "#9040cc");
-};
-
-const psychicButton = document.createElement("img");
-psychicButton.src = "/assets/psychic.webp";
-container.appendChild(psychicButton);
-psychicButton.onclick = function () {
-  filterPokemons("psychic", "#ef4077");
-};
-
-const rockButton = document.createElement("img");
-rockButton.src = "/assets/rock.webp";
-container.appendChild(rockButton);
-rockButton.onclick = function () {
-  filterPokemons("rock", "#afa981");
-};
-
-const steelButton = document.createElement("img");
-steelButton.src = "/assets/steel.webp";
-container.appendChild(steelButton);
-steelButton.onclick = function () {
-  filterPokemons("steel", "#60a1b8");
-};
-
-const waterButton = document.createElement("img");
-waterButton.src = "/assets/water.webp";
-container.appendChild(waterButton);
-waterButton.onclick = function () {
-  filterPokemons("water", "#2980ef");
-};
-
-const allButton = document.createElement("button");
-allButton.textContent = "ALL POKEMONS";
-allButton.style.backgroundColor = "white";
-allButton.style.borderRadius = "1cm";
-container.appendChild(allButton);
-allButton.onclick = function () {
-  filterPokemons("");
-};
-
-//Henter element-klassenavn som array og filtreringsfunskjon
-const pokemonElements = document.getElementsByClassName("pokemon-div");
-function filterPokemons(filter, color) {
-  // Går gjennom hvert element og søker etter om type er det samme som "filter"
-  for (let i = 0; i < pokemonElements.length; i++) {
-    if (pokemonElements[i].querySelector("p").innerHTML.includes(filter)) {
-      pokemonElements[i].style.display = "block";
-      pokemonElements[i].style.backgroundColor = color;
-    } else {
-      pokemonElements[i].style.display = "none";
-    }
-  }
-}
+ //Melding hvis det ikke finnes pokemons av en type
+ const showMessageNoPokemon = document.createElement("h2");
+ showMessageNoPokemon.textContent = "Couldn't Catch 'Em All. No pokemons of this type";
+ showMessageNoPokemon.style.display = "none";
+ container.appendChild(showMessageNoPokemon)
