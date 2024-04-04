@@ -177,7 +177,7 @@ const steelButton = document.createElement("img");
 steelButton.src = "/assets/steel.webp";
 container.appendChild(steelButton);
 steelButton.onclick = function () {
-  filterPokemons("steel", "#60a1b8"); 
+  filterPokemons("steel", "#60a1b8");
 };
 
 const waterButton = document.createElement("img");
@@ -193,9 +193,8 @@ allButton.style.backgroundColor = "white";
 allButton.style.borderRadius = "1cm";
 container.appendChild(allButton);
 allButton.onclick = function () {
-  filterPokemons(""); 
+  filterPokemons("");
 };
-
 
 //Henter element-klassenavn som array og filtreringsfunskjon
 const pokemonElements = document.getElementsByClassName("pokemon-div");
@@ -203,8 +202,8 @@ function filterPokemons(filter, color) {
   // Går gjennom hvert element og søker etter om type er det samme som "filter"
   for (let i = 0; i < pokemonElements.length; i++) {
     if (pokemonElements[i].querySelector("p").innerHTML.includes(filter)) {
-      pokemonElements[i].style.display = "block"
-      pokemonElements[i].style.backgroundColor = color
+      pokemonElements[i].style.display = "block";
+      pokemonElements[i].style.backgroundColor = color;
     } else {
       pokemonElements[i].style.display = "none";
     }
