@@ -12,10 +12,17 @@ const pokemonsYouCanChoose = [];
 //Pokemon valgt av spiller
 let chosenPokemon = {};
 
+//Pokemon å battle mot
+let pokemonToBattle = {};
+
 if (progress == "") {
   welcomePage();
 } else if (progress == "pick") {
   pickYourPokemon();
+} else if (progress == "readyToPlay") {
+  readyToPlay();
+} else if (progress == "woodLevel") {
+  woodLevel();
 }
 
 //De forskjellige sidene/funksjonene som vises
@@ -69,9 +76,9 @@ async function pickYourPokemon() {
   pickYourPokemonTxt.innerText = "Choose your pokemon to help you on the way!";
   pickYourPokemonContainer.appendChild(pickYourPokemonTxt);
 
-  await getPokemonsFromAPI("bulbasaur");
-  await getPokemonsFromAPI("charmander");
-  await getPokemonsFromAPI("squirtle");
+  await getPokemonFromAPI("bulbasaur", true);
+  await getPokemonFromAPI("charmander", true);
+  await getPokemonFromAPI("squirtle", true);
 
   pokemonsYouCanChoose.forEach((pokemon) => {
     const pickPokemonDiv = document.createElement("div");
@@ -109,14 +116,12 @@ function readyToPlay() {
   arrowPicture.style.cssText =
     "height: 200px; position: absolute; right: 200px; bottom: 20px;";
 
-  //Tekstboks som vises på siden. charAt for å få stor forbokstav(Stack Overflow)
-  const showText = document.createElement("h2");
-  showText.style.cssText =
-    "background: white; width: 400px; padding: 15px; border-radius: 5px; border: 1px solid black; position: absolute; left: 50%;";
-
-  showText.innerText = `Good choice, ${userName}! ${
-    chosenPokemon.name.charAt(0).toUpperCase() + chosenPokemon.name.slice(1)
-  } is a great pokemon! Start the search by entering the forest.`;
+  //charAt for å få stor forbokstav(Stack Overflow)
+  createTextBox(
+    `Good choice, ${userName}! ${
+      chosenPokemon.name.charAt(0).toUpperCase() + chosenPokemon.name.slice(1)
+    } is a great pokemon! Start the search by entering the forest.`
+  );
 
   //Ved klikk på pil. Funksjon som beveger pokemon (chatGpt)
   arrowPicture.addEventListener("click", function () {
@@ -139,29 +144,54 @@ function readyToPlay() {
   });
 
   document.body.appendChild(chosenPokemonPicture);
-  document.body.appendChild(showText);
   document.body.appendChild(arrowPicture);
 }
 
-function woodLevel() {
+async function woodLevel() {
   document.body.style.backgroundImage = "url(./assets/wood-background.png)";
   document.body.style.backgroundSize = "cover";
+
+  const chosenPokemonPicture = document.createElement("img");
+  chosenPokemonPicture.src = chosenPokemon.pictureBack;
+  chosenPokemonPicture.style.cssText =
+    "position: absolute; bottom: -20px; left: 450px; height: 200px";
+  document.body.appendChild(chosenPokemonPicture);
+  await getPokemonFromAPI("pidgey", false);
+
+  const pokemonToBattlePicture = document.createElement("img");
+  pokemonToBattlePicture.src = pokemonToBattle.picture;
+  pokemonToBattlePicture.style.cssText =
+    "position: absolute; bottom: 0; left: 700px; height: 200px";
+  document.body.appendChild(pokemonToBattlePicture);
+
+  createTextBox(
+    `Oh no! A wild ${pokemonToBattle.name} appeared! Let's hope ${
+      chosenPokemon.name.charAt(0).toUpperCase() + chosenPokemon.name.slice(1)
+    } can fight him so we can continue our search!`
+  );
+
+  const fightButton = document.createElement("button");
+  saveNameButton.textContent = "Fight!";
 }
+
 //Funksjon som henter pokemon fra API basert på navn
-async function getPokemonsFromAPI(pokemonName) {
+async function getPokemonFromAPI(pokemonName, yourPokemon) {
   try {
     pokemonRequest = await fetch(
       `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
     );
     const pokemonData = await pokemonRequest.json();
-    const pokemonYouCanChoose = {
+    const pokemon = {
       name: pokemonData.name,
       type: pokemonData.types[0].type.name,
       picture: pokemonData.sprites.front_default,
       pictureBack: pokemonData.sprites.back_default,
     };
-
-    pokemonsYouCanChoose.push(pokemonYouCanChoose);
+    if (yourPokemon == true) {
+      pokemonsYouCanChoose.push(pokemon);
+    } else {
+      pokemonToBattle = pokemon;
+    }
   } catch (error) {
     console.log("Couldn't catch 'em all. Please try again. ", error);
   }
@@ -170,4 +200,14 @@ async function getPokemonsFromAPI(pokemonName) {
 //Funksjon som setter body til tom
 function resetHTML() {
   document.body.innerHTML = "";
+}
+
+//Funksjon som lager tekstboks
+function createTextBox(text) {
+  const showText = document.createElement("h2");
+  showText.style.cssText =
+    "background: white; width: 400px; padding: 15px; border-radius: 5px; border: 1px solid black; position: absolute; left: 50%;";
+
+  showText.innerText = text;
+  document.body.appendChild(showText);
 }
