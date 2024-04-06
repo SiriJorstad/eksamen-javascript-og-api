@@ -178,7 +178,7 @@ async function woodLevel() {
   document.body.appendChild(fightButton);
 
   fightButton.addEventListener("click", function () {
-    createStatBoxes(chosenPokemon, pokemonToBattle);
+    createStatBoxes();
   });
 }
 
@@ -189,6 +189,7 @@ async function getPokemonFromAPI(pokemonName, yourPokemon) {
       `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
     );
     const pokemonData = await pokemonRequest.json();
+
     const hp = pokemonData.stats.find(
       (stat) => stat.stat.name == "hp"
     ).base_stat;
@@ -199,13 +200,20 @@ async function getPokemonFromAPI(pokemonName, yourPokemon) {
       pictureBack: pokemonData.sprites.back_default,
       hp: hp,
       maxHp: hp,
+      moves: []
     };
-    console.log(pokemon);
+    
     if (yourPokemon == true) {
+      pokemonMoveRequest = await fetch(
+        `https://pokeapi.co/api/v2/move/tackle/`
+      );
+      const pokemonMoveData = await pokemonMoveRequest.json();
+      pokemon.moves.push(pokemonMoveData)
       pokemonsYouCanChoose.push(pokemon);
     } else {
       pokemonToBattle = pokemon;
     }
+    console.log(pokemon);
   } catch (error) {
     console.log("Couldn't catch 'em all. Please try again. ", error);
   }
@@ -227,8 +235,7 @@ function createTextBox(text) {
 }
 
 //Funksjon som lager stat-oversikt under battle
-
-function createStatBoxes(yourPokemon, opponentPokemon) {
+function createStatBoxes() {
   //Din pokemon
   const yourPokemoStatDiv = document.createElement("div");
   yourPokemoStatDiv.style.cssText =
@@ -270,4 +277,33 @@ function createStatBoxes(yourPokemon, opponentPokemon) {
   opponentPokemonStatDiv.appendChild(opponentPokemonStatTxt);
   opponentPokemonStatDiv.appendChild(maxHealthBarOpponentPokemon);
   maxHealthBarOpponentPokemon.appendChild(healthBarOpponentPokemon);
+}
+
+//Funksjon som henter frem din pokemons moves
+async function addYourPokemonMoves() {
+  try {
+    pokemonRequest = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${chosenPokemon.name}`
+    );
+    const pokemonData = await pokemonRequest.json();
+    const hp = pokemonData.stats.find(
+      (stat) => stat.stat.name == "hp"
+    ).base_stat;
+    const pokemon = {
+      name: pokemonData.name,
+      type: pokemonData.types[0].type.name,
+      picture: pokemonData.sprites.front_default,
+      pictureBack: pokemonData.sprites.back_default,
+      hp: hp,
+      maxHp: hp,
+    };
+    console.log(pokemon);
+    if (yourPokemon == true) {
+      pokemonsYouCanChoose.push(pokemon);
+    } else {
+      pokemonToBattle = pokemon;
+    }
+  } catch (error) {
+    console.log("Couldn't catch 'em all. Please try again. ", error);
+  }
 }
