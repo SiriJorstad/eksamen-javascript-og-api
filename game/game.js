@@ -336,7 +336,7 @@ function showMoves() {
       updateStats();
       const text = `${chosenPokemon.name} did ${move.name} on ${pokemonToBattle.name}!`;
       createTextBox(text);
-      attackFromOpponent();
+      setTimeout(attackFromOpponent, 4000);
     });
   });
 }
@@ -345,7 +345,9 @@ function showMoves() {
 // (attack*(power/defense)) / 2
 //Søkte etter forskjellige løsninger for utregning på nett, endte opp med et regneforslag fra chatGpt
 function calculateAttackDamage(attackersPower, movePower, opponentDefense) {
-  const damage = (attackersPower * (movePower / opponentDefense)) / 2;
+  const damage = Math.floor(
+    (attackersPower * (movePower / opponentDefense)) / 2
+  );
   return damage;
 }
 
@@ -359,7 +361,15 @@ async function attackFromOpponent() {
       `https://pokeapi.co/api/v2/move/${pokemonToBattle.moves[randomAttackMoveIndex].move.name}`
     );
     const pokemonMoveData = await pokemonToBattleMoveRequest.json();
-    const pokemonToBattlePower = pokemonMoveData.power;
+    const pokemonToBattleMovePower = pokemonMoveData.power;
+    chosenPokemon.hp -= calculateAttackDamage(
+      pokemonToBattle.attack,
+      pokemonToBattleMovePower,
+      chosenPokemon.defense
+    );
+    updateStats();
+    const text = `Oh no! ${pokemonToBattle.name} did ${pokemonMoveData.name} on ${chosenPokemon.name}!`;
+    createTextBox(text);
   } catch (error) {
     console.log("Couldn't catch 'em all. Please try again. ", error);
   }
