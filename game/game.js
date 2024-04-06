@@ -101,12 +101,52 @@ function readyToPlay() {
   document.body.style.backgroundSize = "cover";
   const chosenPokemonPicture = document.createElement("img");
   chosenPokemonPicture.src = chosenPokemon.picture;
-  chosenPokemonPicture.style.cssText = "position: absolute; top: 700px; left: 600px;";
+  chosenPokemonPicture.style.cssText =
+    "position: absolute; bottom: 0px; left: 600px; height: 200px";
 
+  const arrowPicture = document.createElement("img");
+  arrowPicture.src = "assets/arrow.png";
+  arrowPicture.style.cssText =
+    "height: 200px; position: absolute; right: 200px; bottom: 20px;";
 
-  document.body.appendChild(chosenPokemonPicture)
+  //Tekstboks som vises på siden. charAt for å få stor forbokstav(Stack Overflow)
+  const showText = document.createElement("h2");
+  showText.style.cssText =
+    "background: white; width: 400px; padding: 15px; border-radius: 5px; border: 1px solid black; position: absolute; left: 50%;";
+
+  showText.innerText = `Good choice, ${userName}! ${
+    chosenPokemon.name.charAt(0).toUpperCase() + chosenPokemon.name.slice(1)
+  } is a great pokemon! Start the search by entering the forest.`;
+
+  //Ved klikk på pil. Funksjon som beveger pokemon (chatGpt)
+  arrowPicture.addEventListener("click", function () {
+    chosenPokemonPicture.src = chosenPokemon.pictureBack;
+
+    let position = parseInt(chosenPokemonPicture.style.left) || 0;
+    const endPosition = window.innerWidth - 200;
+
+    const moveInterval = setInterval(function () {
+      position += 15;
+      chosenPokemonPicture.style.left = position + "px"; //
+
+      if (position >= endPosition) {
+        clearInterval(moveInterval);
+        chosenPokemonPicture.remove();
+        resetHTML();
+        woodLevel();
+      }
+    }, 100);
+  });
+
+  document.body.appendChild(chosenPokemonPicture);
+  document.body.appendChild(showText);
+  document.body.appendChild(arrowPicture);
 }
 
+function woodLevel() {
+  document.body.style.backgroundImage = "url(./assets/wood-background.png)";
+  document.body.style.backgroundSize = "cover";
+}
 //Funksjon som henter pokemon fra API basert på navn
 async function getPokemonsFromAPI(pokemonName) {
   try {
@@ -118,6 +158,7 @@ async function getPokemonsFromAPI(pokemonName) {
       name: pokemonData.name,
       type: pokemonData.types[0].type.name,
       picture: pokemonData.sprites.front_default,
+      pictureBack: pokemonData.sprites.back_default,
     };
 
     pokemonsYouCanChoose.push(pokemonYouCanChoose);
