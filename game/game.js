@@ -179,6 +179,8 @@ async function woodLevel() {
 
   fightButton.addEventListener("click", function () {
     createStatBoxes();
+    showMoves();
+    fightButton.remove();
   });
 }
 
@@ -279,3 +281,15 @@ function createStatBoxes() {
   maxHealthBarOpponentPokemon.appendChild(healthBarOpponentPokemon);
 }
 
+//Funksjon som viser mulige moves i battle
+function showMoves() {
+  chosenPokemon.moves.forEach((move) => {
+    const moveButton = document.createElement("button");
+    moveButton.innerText = move.name.toUpperCase();
+    moveButton.style.cssText =
+      "font-size: 20px; padding: 5px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; display: block; background-color: white; margin-top: 100px;";
+
+    document.body.appendChild(moveButton);
+
+  });
+}
