@@ -184,7 +184,7 @@ async function woodLevel() {
   });
 }
 
-//Funksjon som henter pokemon fra API basert på navn
+//Funksjon som henter pokemon fra API basert på navn og om det er en valgbar pokemon/motstander
 async function getPokemonFromAPI(pokemonName, yourPokemon) {
   try {
     pokemonRequest = await fetch(
@@ -221,9 +221,12 @@ async function getPokemonFromAPI(pokemonName, yourPokemon) {
       pokemon.moves.push(pokemonMoveData);
       pokemonsYouCanChoose.push(pokemon);
     } else {
+      const pokemonToBattleMoves = pokemonData.moves.filter(
+        (move) => move.version_group_details[0].level_learned_at == 0
+      );
+      pokemon.moves = pokemonToBattleMoves;
       pokemonToBattle = pokemon;
     }
-    console.log(pokemon);
   } catch (error) {
     console.log("Couldn't catch 'em all. Please try again. ", error);
   }
@@ -235,13 +238,18 @@ function resetHTML() {
 }
 
 //Funksjon som lager tekstboks
+const showText = document.createElement("h2");
 function createTextBox(text) {
-  const showText = document.createElement("h2");
-  showText.style.cssText =
-    "background: white; width: 400px; padding: 15px; border-radius: 5px; border: 1px solid black; margin: auto;";
+  if (document.getElementById("show-text")) {
+    showText.innerText = text;
+  } else {
+    showText.id = "show-text";
+    showText.style.cssText =
+      "background: white; width: 400px; padding: 15px; border-radius: 5px; border: 1px solid black; margin: auto;";
 
-  showText.innerText = text;
-  document.body.appendChild(showText);
+    showText.innerText = text;
+    document.body.appendChild(showText);
+  }
 }
 
 //Funksjon som lager stat-oversikt under battle
@@ -326,6 +334,9 @@ function showMoves() {
         pokemonToBattle.defense
       );
       updateStats();
+      const text = `${chosenPokemon.name} did ${move.name} on ${pokemonToBattle.name}!`;
+      createTextBox(text);
+      attackFromOpponent();
     });
   });
 }
@@ -333,8 +344,23 @@ function showMoves() {
 //Funksjon som regner ut attack score. Den som angriper sin attack, movets styrke, og den som angriper sin defense.
 // (attack*(power/defense)) / 2
 //Søkte etter forskjellige løsninger for utregning på nett, endte opp med et regneforslag fra chatGpt
-
 function calculateAttackDamage(attackersPower, movePower, opponentDefense) {
-    const damage = (attackersPower*(movePower/opponentDefense)) / 2
-    return(damage)
+  const damage = (attackersPower * (movePower / opponentDefense)) / 2;
+  return damage;
+}
+
+//Funksjon som henter tilfeldig move og gjør attack fra motstander
+async function attackFromOpponent() {
+  const randomAttackMoveIndex = Math.floor(
+    Math.random() * pokemonToBattle.moves.length
+  );
+  try {
+    pokemonToBattleMoveRequest = await fetch(
+      `https://pokeapi.co/api/v2/move/${pokemonToBattle.moves[randomAttackMoveIndex].move.name}`
+    );
+    const pokemonMoveData = await pokemonToBattleMoveRequest.json();
+    const pokemonToBattlePower = pokemonMoveData.power;
+  } catch (error) {
+    console.log("Couldn't catch 'em all. Please try again. ", error);
+  }
 }
