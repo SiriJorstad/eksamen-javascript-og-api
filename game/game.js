@@ -328,15 +328,24 @@ function showMoves() {
     document.body.appendChild(moveButton);
 
     moveButton.addEventListener("click", function () {
-      pokemonToBattle.hp -= calculateAttackDamage(
+      moveButton.style.display = "none";
+      const damage = calculateAttackDamage(
         chosenPokemon.attack,
         move.power,
         pokemonToBattle.defense
       );
+      pokemonToBattle.hp = Math.max(pokemonToBattle.hp - damage, 0);
       updateStats();
       const text = `${chosenPokemon.name} did ${move.name} on ${pokemonToBattle.name}!`;
       createTextBox(text);
-      setTimeout(attackFromOpponent, 4000);
+      setTimeout(function () {
+        attackFromOpponent();
+        setTimeout(function () {
+          if (chosenPokemon.hp > 0) {
+            moveButton.style.display = "block";
+          }
+        }, 2000);
+      }, 4000);
     });
   });
 }
@@ -362,11 +371,12 @@ async function attackFromOpponent() {
     );
     const pokemonMoveData = await pokemonToBattleMoveRequest.json();
     const pokemonToBattleMovePower = pokemonMoveData.power;
-    chosenPokemon.hp -= calculateAttackDamage(
+    const damage = calculateAttackDamage(
       pokemonToBattle.attack,
       pokemonToBattleMovePower,
       chosenPokemon.defense
     );
+    chosenPokemon.hp = Math.max(chosenPokemon.hp - damage, 0);
     updateStats();
     const text = `Oh no! ${pokemonToBattle.name} did ${pokemonMoveData.name} on ${chosenPokemon.name}!`;
     createTextBox(text);
