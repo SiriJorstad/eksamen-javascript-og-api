@@ -4,10 +4,13 @@
 let userName = "";
 
 //Progress i spillet ( pick, X X X X X X)
-let progress = "pick";
+let progress = "";
 
 //Pokemons spilleren kan velge fra
 const pokemonsYouCanChoose = [];
+
+//Pokemon valgt av spiller
+let chosenPokemon = {};
 
 if (progress == "") {
   welcomePage();
@@ -83,7 +86,25 @@ async function pickYourPokemon() {
     pickYourPokemonContainer.appendChild(pickPokemonDiv);
     pickPokemonDiv.appendChild(pickPokemonName);
     pickPokemonDiv.appendChild(pickPokemonPicuture);
+
+    pickPokemonDiv.addEventListener("click", function () {
+      chosenPokemon = pokemon;
+      resetHTML();
+      readyToPlay();
+    });
   });
+}
+
+function readyToPlay() {
+  document.body.style.backgroundImage =
+    "url(./assets/background-without-ash.png)";
+  document.body.style.backgroundSize = "cover";
+  const chosenPokemonPicture = document.createElement("img");
+  chosenPokemonPicture.src = chosenPokemon.picture;
+  chosenPokemonPicture.style.cssText = "position: absolute; top: 700px; left: 600px;";
+
+
+  document.body.appendChild(chosenPokemonPicture)
 }
 
 //Funksjon som henter pokemon fra API basert på navn
