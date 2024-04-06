@@ -370,6 +370,16 @@ async function attackFromOpponent() {
     updateStats();
     const text = `Oh no! ${pokemonToBattle.name} did ${pokemonMoveData.name} on ${chosenPokemon.name}!`;
     createTextBox(text);
+
+    if (chosenPokemon.hp <= 0) {
+      setTimeout(function () {
+        alert(
+          `Sorry, ${userName}! ${chosenPokemon.name} lost the battle. Try again to find Pikachu!`
+        );
+        resetHTML();
+        welcomePage();
+      }, 2000);
+    }
   } catch (error) {
     console.log("Couldn't catch 'em all. Please try again. ", error);
   }
