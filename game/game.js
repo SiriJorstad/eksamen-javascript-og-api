@@ -167,11 +167,19 @@ async function woodLevel() {
   createTextBox(
     `Oh no! A wild ${pokemonToBattle.name} appeared! Let's hope ${
       chosenPokemon.name.charAt(0).toUpperCase() + chosenPokemon.name.slice(1)
-    } can fight him so we can continue our search!`
+    } can fight him so we can continue our search for Pikachu!`
   );
 
   const fightButton = document.createElement("button");
-  saveNameButton.textContent = "Fight!";
+  fightButton.style.cssText =
+    "font-size: 25px; padding: 10px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; display: block; background-color: #ffc425;";
+
+  fightButton.textContent = "Fight!";
+  document.body.appendChild(fightButton);
+
+  fightButton.addEventListener("click", function () {
+    createStatBoxes(chosenPokemon, pokemonToBattle);
+  });
 }
 
 //Funksjon som henter pokemon fra API basert på navn
@@ -181,12 +189,18 @@ async function getPokemonFromAPI(pokemonName, yourPokemon) {
       `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
     );
     const pokemonData = await pokemonRequest.json();
+    const hp = pokemonData.stats.find(
+      (stat) => stat.stat.name == "hp"
+    ).base_stat;
     const pokemon = {
       name: pokemonData.name,
       type: pokemonData.types[0].type.name,
       picture: pokemonData.sprites.front_default,
       pictureBack: pokemonData.sprites.back_default,
+      hp: hp,
+      maxHp: hp,
     };
+    console.log(pokemon);
     if (yourPokemon == true) {
       pokemonsYouCanChoose.push(pokemon);
     } else {
@@ -206,8 +220,54 @@ function resetHTML() {
 function createTextBox(text) {
   const showText = document.createElement("h2");
   showText.style.cssText =
-    "background: white; width: 400px; padding: 15px; border-radius: 5px; border: 1px solid black; position: absolute; left: 50%;";
+    "background: white; width: 400px; padding: 15px; border-radius: 5px; border: 1px solid black; margin: auto;";
 
   showText.innerText = text;
   document.body.appendChild(showText);
+}
+
+//Funksjon som lager stat-oversikt under battle
+
+function createStatBoxes(yourPokemon, opponentPokemon) {
+  //Din pokemon
+  const yourPokemoStatDiv = document.createElement("div");
+  yourPokemoStatDiv.style.cssText =
+    "background: #ffc426; width: 100px; padding: 15px; border-radius: 5px; border: 1px solid black; position: absolute; left: 250px; bottom: 300px";
+  const yourPokemonStatTxt = document.createElement("p");
+  yourPokemonStatTxt.innerText = `${chosenPokemon.name.toUpperCase()} HP: ${
+    chosenPokemon.hp
+  } / ${chosenPokemon.maxHp}`;
+
+  const maxHealthBarYourPokemon = document.createElement("div");
+  maxHealthBarYourPokemon.style.cssText =
+    "width: 100px; border: 1px solid black; border-radius: 5px; height: 20px;";
+  const healthBarYourPokemon = document.createElement("div");
+  healthBarYourPokemon.style.cssText = `width: ${
+    (100 * chosenPokemon.hp) / chosenPokemon.maxHp
+  }px; background:  green; height: 20px`;
+  //Din motstander
+  const opponentPokemonStatDiv = document.createElement("div");
+  opponentPokemonStatDiv.style.cssText =
+    "background: #ffc426; width: 100px; padding: 15px; border-radius: 5px; border: 1px solid black; position: absolute; right: 250px; bottom: 300px;";
+  const opponentPokemonStatTxt = document.createElement("p");
+  opponentPokemonStatTxt.innerText = `${pokemonToBattle.name.toUpperCase()} HP: ${
+    pokemonToBattle.hp
+  } / ${pokemonToBattle.maxHp}`;
+
+  const maxHealthBarOpponentPokemon = document.createElement("div");
+  maxHealthBarOpponentPokemon.style.cssText =
+    "width: 100px; border: 1px solid black; border-radius: 5px; height: 20px;";
+  const healthBarOpponentPokemon = document.createElement("div");
+  healthBarOpponentPokemon.style.cssText = `width: ${
+    (100 * pokemonToBattle.hp) / pokemonToBattle.maxHp
+  }px; background:  green; height: 20px`;
+
+  document.body.appendChild(yourPokemoStatDiv);
+  document.body.appendChild(opponentPokemonStatDiv);
+  yourPokemoStatDiv.appendChild(yourPokemonStatTxt);
+  yourPokemoStatDiv.appendChild(maxHealthBarYourPokemon);
+  maxHealthBarYourPokemon.appendChild(healthBarYourPokemon);
+  opponentPokemonStatDiv.appendChild(opponentPokemonStatTxt);
+  opponentPokemonStatDiv.appendChild(maxHealthBarOpponentPokemon);
+  maxHealthBarOpponentPokemon.appendChild(healthBarOpponentPokemon);
 }
