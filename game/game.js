@@ -195,12 +195,20 @@ async function getPokemonFromAPI(pokemonName, yourPokemon) {
     const hp = pokemonData.stats.find(
       (stat) => stat.stat.name == "hp"
     ).base_stat;
+    const attack = pokemonData.stats.find(
+      (stat) => stat.stat.name == "attack"
+    ).base_stat;
+    const defense = pokemonData.stats.find(
+      (stat) => stat.stat.name == "defense"
+    ).base_stat;
     const pokemon = {
       name: pokemonData.name,
       type: pokemonData.types[0].type.name,
       picture: pokemonData.sprites.front_default,
       pictureBack: pokemonData.sprites.back_default,
       hp: hp,
+      attack: attack,
+      defense: defense,
       maxHp: hp,
       moves: [],
     };
@@ -312,8 +320,21 @@ function showMoves() {
     document.body.appendChild(moveButton);
 
     moveButton.addEventListener("click", function () {
-      pokemonToBattle.hp -= 20;
+      pokemonToBattle.hp -= calculateAttackDamage(
+        chosenPokemon.attack,
+        move.power,
+        pokemonToBattle.defense
+      );
       updateStats();
     });
   });
+}
+
+//Funksjon som regner ut attack score. Den som angriper sin attack, movets styrke, og den som angriper sin defense.
+// (attack*(power/defense)) / 2
+//Søkte etter forskjellige løsninger for utregning på nett, endte opp med et regneforslag fra chatGpt
+
+function calculateAttackDamage(attackersPower, movePower, opponentDefense) {
+    const damage = (attackersPower*(movePower/opponentDefense)) / 2
+    return(damage)
 }
