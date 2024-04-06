@@ -237,12 +237,17 @@ function createTextBox(text) {
 }
 
 //Funksjon som lager stat-oversikt under battle
+const yourPokemonStatTxt = document.createElement("p");
+const healthBarYourPokemon = document.createElement("div");
+
+const opponentPokemonStatTxt = document.createElement("p");
+const healthBarOpponentPokemon = document.createElement("div");
+
 function createStatBoxes() {
   //Din pokemon
   const yourPokemoStatDiv = document.createElement("div");
   yourPokemoStatDiv.style.cssText =
     "background: #ffc426; width: 100px; padding: 15px; border-radius: 5px; border: 1px solid black; position: absolute; left: 250px; bottom: 300px";
-  const yourPokemonStatTxt = document.createElement("p");
   yourPokemonStatTxt.innerText = `${chosenPokemon.name.toUpperCase()} HP: ${
     chosenPokemon.hp
   } / ${chosenPokemon.maxHp}`;
@@ -250,7 +255,6 @@ function createStatBoxes() {
   const maxHealthBarYourPokemon = document.createElement("div");
   maxHealthBarYourPokemon.style.cssText =
     "width: 100px; border: 1px solid black; border-radius: 5px; height: 20px;";
-  const healthBarYourPokemon = document.createElement("div");
   healthBarYourPokemon.style.cssText = `width: ${
     (100 * chosenPokemon.hp) / chosenPokemon.maxHp
   }px; background:  green; height: 20px`;
@@ -258,7 +262,6 @@ function createStatBoxes() {
   const opponentPokemonStatDiv = document.createElement("div");
   opponentPokemonStatDiv.style.cssText =
     "background: #ffc426; width: 100px; padding: 15px; border-radius: 5px; border: 1px solid black; position: absolute; right: 250px; bottom: 300px;";
-  const opponentPokemonStatTxt = document.createElement("p");
   opponentPokemonStatTxt.innerText = `${pokemonToBattle.name.toUpperCase()} HP: ${
     pokemonToBattle.hp
   } / ${pokemonToBattle.maxHp}`;
@@ -266,7 +269,6 @@ function createStatBoxes() {
   const maxHealthBarOpponentPokemon = document.createElement("div");
   maxHealthBarOpponentPokemon.style.cssText =
     "width: 100px; border: 1px solid black; border-radius: 5px; height: 20px;";
-  const healthBarOpponentPokemon = document.createElement("div");
   healthBarOpponentPokemon.style.cssText = `width: ${
     (100 * pokemonToBattle.hp) / pokemonToBattle.maxHp
   }px; background:  green; height: 20px`;
@@ -281,6 +283,24 @@ function createStatBoxes() {
   maxHealthBarOpponentPokemon.appendChild(healthBarOpponentPokemon);
 }
 
+//Funksjon som oppdaterer HP i statsoversikten
+function updateStats() {
+  yourPokemonStatTxt.innerText = `${chosenPokemon.name.toUpperCase()} HP: ${
+    chosenPokemon.hp
+  } / ${chosenPokemon.maxHp}`;
+  healthBarYourPokemon.style.cssText = `width: ${
+    (100 * chosenPokemon.hp) / chosenPokemon.maxHp
+  }px; background:  green; height: 20px`;
+
+  opponentPokemonStatTxt.innerText = `${pokemonToBattle.name.toUpperCase()} HP: ${
+    pokemonToBattle.hp
+  } / ${pokemonToBattle.maxHp}`;
+
+  healthBarOpponentPokemon.style.cssText = `width: ${
+    (100 * pokemonToBattle.hp) / pokemonToBattle.maxHp
+  }px; background:  green; height: 20px`;
+}
+
 //Funksjon som viser mulige moves i battle
 function showMoves() {
   chosenPokemon.moves.forEach((move) => {
@@ -291,5 +311,9 @@ function showMoves() {
 
     document.body.appendChild(moveButton);
 
+    moveButton.addEventListener("click", function () {
+      pokemonToBattle.hp -= 20;
+      updateStats();
+    });
   });
 }
