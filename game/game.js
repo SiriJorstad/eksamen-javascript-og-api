@@ -200,15 +200,15 @@ async function getPokemonFromAPI(pokemonName, yourPokemon) {
       pictureBack: pokemonData.sprites.back_default,
       hp: hp,
       maxHp: hp,
-      moves: []
+      moves: [],
     };
-    
+
     if (yourPokemon == true) {
       pokemonMoveRequest = await fetch(
         `https://pokeapi.co/api/v2/move/tackle/`
       );
       const pokemonMoveData = await pokemonMoveRequest.json();
-      pokemon.moves.push(pokemonMoveData)
+      pokemon.moves.push(pokemonMoveData);
       pokemonsYouCanChoose.push(pokemon);
     } else {
       pokemonToBattle = pokemon;
@@ -279,31 +279,3 @@ function createStatBoxes() {
   maxHealthBarOpponentPokemon.appendChild(healthBarOpponentPokemon);
 }
 
-//Funksjon som henter frem din pokemons moves
-async function addYourPokemonMoves() {
-  try {
-    pokemonRequest = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${chosenPokemon.name}`
-    );
-    const pokemonData = await pokemonRequest.json();
-    const hp = pokemonData.stats.find(
-      (stat) => stat.stat.name == "hp"
-    ).base_stat;
-    const pokemon = {
-      name: pokemonData.name,
-      type: pokemonData.types[0].type.name,
-      picture: pokemonData.sprites.front_default,
-      pictureBack: pokemonData.sprites.back_default,
-      hp: hp,
-      maxHp: hp,
-    };
-    console.log(pokemon);
-    if (yourPokemon == true) {
-      pokemonsYouCanChoose.push(pokemon);
-    } else {
-      pokemonToBattle = pokemon;
-    }
-  } catch (error) {
-    console.log("Couldn't catch 'em all. Please try again. ", error);
-  }
-}
