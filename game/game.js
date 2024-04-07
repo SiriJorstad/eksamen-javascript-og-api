@@ -1,5 +1,4 @@
 //Variabler
-
 //Spillerens navn
 let userName = "";
 
@@ -139,7 +138,6 @@ function readyToPlay() {
 
       if (position >= endPosition) {
         clearInterval(moveInterval);
-        chosenPokemonPicture.remove();
         resetHTML();
         woodLevel();
       }
@@ -152,15 +150,13 @@ function readyToPlay() {
 
 //Bilde av pokemon og motstander variabler
 const chosenPokemonPicture = document.createElement("img");
-chosenPokemonPicture.style.cssText = "height: 200px";
-
 const pokemonToBattlePicture = document.createElement("img");
-pokemonToBattlePicture.style.cssText = "height: 200px";
 
 //Fightbutton
 const fightButton = document.createElement("button");
 fightButton.style.cssText =
   "font-size: 25px; padding: 10px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; display: block; background-color: #ffc425;";
+fightButton.textContent = "Fight!";
 
 // woodLevel
 async function woodLevel() {
@@ -169,13 +165,13 @@ async function woodLevel() {
 
   chosenPokemonPicture.src = chosenPokemon.pictureBack;
   chosenPokemonPicture.style.cssText =
-    "position: absolute; bottom: -20px; left: 450px;";
+    "position: absolute; bottom: -20px; left: 450px; height: 200px;";
   document.body.appendChild(chosenPokemonPicture);
   await getPokemonFromAPI("pidgey", false);
 
   pokemonToBattlePicture.src = pokemonToBattle.picture;
   pokemonToBattlePicture.style.cssText =
-    "position: absolute; bottom: 0; left: 700px;";
+    "position: absolute; bottom: 0; left: 700px; height: 200px";
   document.body.appendChild(pokemonToBattlePicture);
 
   createTextBox(
@@ -184,7 +180,6 @@ async function woodLevel() {
     } can fight him so we can continue our search for Pikachu!`
   );
 
-  fightButton.textContent = "Fight!";
   document.body.appendChild(fightButton);
 
   fightButton.addEventListener("click", function () {
@@ -212,6 +207,15 @@ async function jungleLevel() {
   createTextBox(
     `An angry ${pokemonToBattle.name} is in the way! Let's fight him!`
   );
+  document.body.appendChild(fightButton);
+
+  fightButton.addEventListener("click", function () {
+    createStatBoxes();
+    showMoves();
+    fightButton.remove();
+    console.log(pokemonToBattle);
+    console.log(chosenPokemon);
+  });
 }
 
 //Funksjon som henter pokemon fra API basert på navn og om det er en valgbar pokemon/motstander
@@ -288,6 +292,7 @@ const healthBarYourPokemon = document.createElement("div");
 
 const opponentPokemonStatTxt = document.createElement("p");
 const healthBarOpponentPokemon = document.createElement("div");
+const maxHealthBarYourPokemon = document.createElement("div");
 
 const yourPokemonStatDiv = document.createElement("div");
 yourPokemonStatDiv.style.cssText =
@@ -295,13 +300,21 @@ yourPokemonStatDiv.style.cssText =
 const opponentPokemonStatDiv = document.createElement("div");
 opponentPokemonStatDiv.style.cssText =
   "background: #ffc426; width: 100px; padding: 15px; border-radius: 5px; border: 1px solid black; position: absolute; right: 250px; bottom: 300px;";
+const maxHealthBarOpponentPokemon = document.createElement("div");
+
+yourPokemonStatDiv.appendChild(yourPokemonStatTxt);
+yourPokemonStatDiv.appendChild(maxHealthBarYourPokemon);
+maxHealthBarYourPokemon.appendChild(healthBarYourPokemon);
+opponentPokemonStatDiv.appendChild(opponentPokemonStatTxt);
+opponentPokemonStatDiv.appendChild(maxHealthBarOpponentPokemon);
+maxHealthBarOpponentPokemon.appendChild(healthBarOpponentPokemon);
+
 function createStatBoxes() {
   //Din pokemon
   yourPokemonStatTxt.innerText = `${chosenPokemon.name.toUpperCase()} HP: ${
     chosenPokemon.hp
   } / ${chosenPokemon.maxHp}`;
 
-  const maxHealthBarYourPokemon = document.createElement("div");
   maxHealthBarYourPokemon.style.cssText =
     "width: 100px; border: 1px solid black; border-radius: 5px; height: 20px;";
   healthBarYourPokemon.style.cssText = `width: ${
@@ -312,7 +325,6 @@ function createStatBoxes() {
     pokemonToBattle.hp
   } / ${pokemonToBattle.maxHp}`;
 
-  const maxHealthBarOpponentPokemon = document.createElement("div");
   maxHealthBarOpponentPokemon.style.cssText =
     "width: 100px; border: 1px solid black; border-radius: 5px; height: 20px;";
   healthBarOpponentPokemon.style.cssText = `width: ${
@@ -321,12 +333,6 @@ function createStatBoxes() {
 
   document.body.appendChild(yourPokemonStatDiv);
   document.body.appendChild(opponentPokemonStatDiv);
-  yourPokemonStatDiv.appendChild(yourPokemonStatTxt);
-  yourPokemonStatDiv.appendChild(maxHealthBarYourPokemon);
-  maxHealthBarYourPokemon.appendChild(healthBarYourPokemon);
-  opponentPokemonStatDiv.appendChild(opponentPokemonStatTxt);
-  opponentPokemonStatDiv.appendChild(maxHealthBarOpponentPokemon);
-  maxHealthBarOpponentPokemon.appendChild(healthBarOpponentPokemon);
 }
 
 //Funksjon som oppdaterer HP i statsoversikten
@@ -350,63 +356,69 @@ function updateStats() {
 //Funksjon som viser mulige moves i battle
 function showMoves() {
   chosenPokemon.moves.forEach((move) => {
-    const moveButton = document.createElement("button");
-    moveButton.innerText = move.name.toUpperCase();
-    moveButton.style.cssText =
-      "font-size: 20px; padding: 5px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; display: block; background-color: white; margin-top: 100px;";
+    if (document.getElementById(move.name)) {
+    } else {
+      const moveButton = document.createElement("button");
+      moveButton.id = move.name;
+      moveButton.innerText = move.name.toUpperCase();
+      moveButton.style.cssText =
+        "font-size: 20px; padding: 5px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; display: block; background-color: white; margin-top: 100px;";
 
-    document.body.appendChild(moveButton);
+      document.body.appendChild(moveButton);
 
-    moveButton.addEventListener("click", function () {
-      moveButton.style.display = "none";
-      const damage = calculateAttackDamage(
-        chosenPokemon.attack,
-        move.power,
-        pokemonToBattle.defense
-      );
-      pokemonToBattle.hp = Math.max(pokemonToBattle.hp - damage, 0);
-      updateStats();
-      createTextBox(
-        `${chosenPokemon.name} did ${move.name} on ${pokemonToBattle.name}!`
-      );
+      moveButton.addEventListener("click", function () {
+        moveButton.style.display = "none";
+        const damage = calculateAttackDamage(
+          chosenPokemon.attack,
+          move.power,
+          pokemonToBattle.defense
+        );
+        pokemonToBattle.hp = Math.max(pokemonToBattle.hp - damage, 0);
+        updateStats();
+        createTextBox(
+          `${chosenPokemon.name} did ${move.name} on ${pokemonToBattle.name}!`
+        );
 
-      setTimeout(function () {
-        //Hvis motstander har 0 i HP
-        if (pokemonToBattle.hp <= 0) {
-          document.body.appendChild(arrowPicture);
-          yourPokemonStatDiv.remove();
-          opponentPokemonStatDiv.remove();
-          pokemonToBattlePicture.remove();
-          createTextBox(
-            `Yey! ${chosenPokemon.name} won the battle against ${pokemonToBattle.name}! Let's continue the search for Pikachu.`
-          );
+        setTimeout(function () {
+          //Hvis motstander har 0 i HP
+          if (pokemonToBattle.hp <= 0) {
+            document.body.appendChild(arrowPicture);
+            yourPokemonStatDiv.remove();
+            opponentPokemonStatDiv.remove();
+            pokemonToBattlePicture.remove();
+            createTextBox(
+              `Yey! ${chosenPokemon.name} won the battle against ${pokemonToBattle.name}! Let's continue the search for Pikachu.`
+            );
 
-          arrowPicture.addEventListener("click", function () {
-            let position = parseInt(chosenPokemonPicture.style.left) || 0;
-            const endPosition = window.innerWidth - 200;
+            arrowPicture.addEventListener("click", function arrowClick() {
+              pokemonToBattle = {};
+              arrowPicture.removeEventListener("click", arrowClick);
 
-            const moveInterval = setInterval(function () {
-              position += 15;
-              chosenPokemonPicture.style.left = position + "px"; //
+              let position = parseInt(chosenPokemonPicture.style.left) || 0;
+              const endPosition = window.innerWidth - 200;
 
-              if (position >= endPosition) {
-                clearInterval(moveInterval);
-                chosenPokemonPicture.remove();
-                resetHTML();
-                jungleLevel();
+              const moveInterval = setInterval(function () {
+                position += 15;
+                chosenPokemonPicture.style.left = position + "px"; //
+
+                if (position >= endPosition) {
+                  clearInterval(moveInterval);
+                  resetHTML();
+                  jungleLevel();
+                }
+              }, 100);
+            });
+          } else {
+            attackFromOpponent();
+            setTimeout(function () {
+              if (chosenPokemon.hp > 0) {
+                moveButton.style.display = "block";
               }
-            }, 100);
-          });
-        } else {
-          attackFromOpponent();
-          setTimeout(function () {
-            if (chosenPokemon.hp > 0) {
-              moveButton.style.display = "block";
-            }
-          }, 2000);
-        }
-      }, 4000);
-    });
+            }, 2000);
+          }
+        }, 4000);
+      });
+    }
   });
 }
 
