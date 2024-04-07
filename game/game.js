@@ -3,7 +3,15 @@
 let userName = "";
 
 //Progress i spillet ( pick, X X X X X X)
-let progress = "";
+let progress = 0;
+const levels = [
+  welcomePage,
+  pickYourPokemon,
+  readyToPlay,
+  woodLevel,
+  jungleLevel,
+];
+levels[0]()
 
 //Pokemons spilleren kan velge fra
 let pokemonsYouCanChoose = [];
@@ -13,16 +21,6 @@ let chosenPokemon = {};
 
 //Pokemon å battle mot
 let pokemonToBattle = {};
-
-if (progress == "") {
-  welcomePage();
-} else if (progress == "pick") {
-  pickYourPokemon();
-} else if (progress == "readyToPlay") {
-  readyToPlay();
-} else if (progress == "woodLevel") {
-  woodLevel();
-}
 
 //De forskjellige sidene/funksjonene som vises
 function welcomePage() {
@@ -52,8 +50,9 @@ function welcomePage() {
 
   saveNameButton.addEventListener("click", function () {
     userName = userQuestionName.value;
+    progress++;
     resetHTML();
-    pickYourPokemon();
+    levels[progress]();
   });
 
   document.body.appendChild(welcomeToGameText);
@@ -95,8 +94,9 @@ async function pickYourPokemon() {
 
     pickPokemonDiv.addEventListener("click", function () {
       chosenPokemon = pokemon;
+      progress++;
       resetHTML();
-      readyToPlay();
+      levels[progress]();
     });
   });
 }
@@ -106,13 +106,18 @@ const arrowPicture = document.createElement("img");
 arrowPicture.src = "assets/arrow.png";
 arrowPicture.style.cssText =
   "height: 200px; position: absolute; right: 200px; bottom: 20px;";
+arrowPicture.addEventListener("click", nextLevel);
+
+//Bilde av pokemon og motstander variabler
+const chosenPokemonPicture = document.createElement("img");
+const pokemonToBattlePicture = document.createElement("img");
 
 // readyToPlay
 function readyToPlay() {
   document.body.style.backgroundImage =
     "url(./assets/background-without-ash.png)";
   document.body.style.backgroundSize = "cover";
-  const chosenPokemonPicture = document.createElement("img");
+  
   chosenPokemonPicture.src = chosenPokemon.picture;
   chosenPokemonPicture.style.cssText =
     "position: absolute; bottom: 0px; left: 600px; height: 200px";
@@ -123,34 +128,32 @@ function readyToPlay() {
       chosenPokemon.name.charAt(0).toUpperCase() + chosenPokemon.name.slice(1)
     } is a great pokemon! Start the search by entering the forest.`
   );
-
-  //Ved klikk på pil. Funksjon som beveger pokemon (chatGpt)
-  arrowPicture.addEventListener("click", function arrowClick() {
-    arrowPicture.removeEventListener("click", arrowClick);
-    chosenPokemonPicture.src = chosenPokemon.pictureBack;
-
-    let position = parseInt(chosenPokemonPicture.style.left) || 0;
-    const endPosition = window.innerWidth - 200;
-
-    const moveInterval = setInterval(function () {
-      position += 15;
-      chosenPokemonPicture.style.left = position + "px"; //
-
-      if (position >= endPosition) {
-        clearInterval(moveInterval);
-        resetHTML();
-        woodLevel();
-      }
-    }, 100);
-  });
+  
 
   document.body.appendChild(chosenPokemonPicture);
   document.body.appendChild(arrowPicture);
 }
 
-//Bilde av pokemon og motstander variabler
-const chosenPokemonPicture = document.createElement("img");
-const pokemonToBattlePicture = document.createElement("img");
+
+//Funksjon etter pil-klikk som tar spiller til neste nivå
+function nextLevel() {
+  progress++;
+  chosenPokemonPicture.src = chosenPokemon.pictureBack;
+
+  //Beveger pokemon mot høyre (chatGpt)
+  let position = parseInt(chosenPokemonPicture.style.left) || 0;
+  const endPosition = window.innerWidth - 200;
+
+  const moveInterval = setInterval(function () {
+    position += 15;
+    chosenPokemonPicture.style.left = position + "px"; 
+    if (position >= endPosition) {
+      clearInterval(moveInterval);
+      resetHTML();
+      levels[progress]();
+    }
+  }, 100);
+}
 
 //Fightbutton
 const fightButton = document.createElement("button");
@@ -213,8 +216,6 @@ async function jungleLevel() {
     createStatBoxes();
     showMoves();
     fightButton.remove();
-    console.log(pokemonToBattle);
-    console.log(chosenPokemon);
   });
 }
 
@@ -390,24 +391,7 @@ function showMoves() {
               `Yey! ${chosenPokemon.name} won the battle against ${pokemonToBattle.name}! Let's continue the search for Pikachu.`
             );
 
-            arrowPicture.addEventListener("click", function arrowClick() {
-              pokemonToBattle = {};
-              arrowPicture.removeEventListener("click", arrowClick);
-
-              let position = parseInt(chosenPokemonPicture.style.left) || 0;
-              const endPosition = window.innerWidth - 200;
-
-              const moveInterval = setInterval(function () {
-                position += 15;
-                chosenPokemonPicture.style.left = position + "px"; //
-
-                if (position >= endPosition) {
-                  clearInterval(moveInterval);
-                  resetHTML();
-                  jungleLevel();
-                }
-              }, 100);
-            });
+            arrowPicture.addEventListener("click", nextLevel);
           } else {
             attackFromOpponent();
             setTimeout(function () {
