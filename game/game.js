@@ -10,8 +10,9 @@ const levels = [
   readyToPlay,
   woodLevel,
   jungleLevel,
+  knutLevel,
 ];
-levels[0]()
+levels[0]();
 
 //Pokemons spilleren kan velge fra
 let pokemonsYouCanChoose = [];
@@ -46,7 +47,7 @@ function welcomePage() {
   const saveNameButton = document.createElement("button");
   saveNameButton.textContent = "Play";
   saveNameButton.style.cssText =
-    "font-size: 25px; padding: 10px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; background-color: #4cfd6e;";
+    "font-weight: bold; font-size: 25px; padding: 10px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; background-color: #4cfd6e;";
 
   saveNameButton.addEventListener("click", function () {
     userName = userQuestionName.value;
@@ -117,7 +118,7 @@ function readyToPlay() {
   document.body.style.backgroundImage =
     "url(./assets/background-without-ash.png)";
   document.body.style.backgroundSize = "cover";
-  
+
   chosenPokemonPicture.src = chosenPokemon.picture;
   chosenPokemonPicture.style.cssText =
     "position: absolute; bottom: 0px; left: 600px; height: 200px";
@@ -128,12 +129,10 @@ function readyToPlay() {
       chosenPokemon.name.charAt(0).toUpperCase() + chosenPokemon.name.slice(1)
     } is a great pokemon! Start the search by entering the forest.`
   );
-  
 
   document.body.appendChild(chosenPokemonPicture);
   document.body.appendChild(arrowPicture);
 }
-
 
 //Funksjon etter pil-klikk som tar spiller til neste nivå
 function nextLevel() {
@@ -146,7 +145,7 @@ function nextLevel() {
 
   const moveInterval = setInterval(function () {
     position += 15;
-    chosenPokemonPicture.style.left = position + "px"; 
+    chosenPokemonPicture.style.left = position + "px";
     if (position >= endPosition) {
       clearInterval(moveInterval);
       resetHTML();
@@ -219,6 +218,40 @@ async function jungleLevel() {
   });
 }
 
+function knutLevel() {
+  document.body.style.backgroundImage = "url(./assets/knut-background.png)";
+  document.body.style.backgroundSize = "cover";
+
+  createTextBox("Oh look over there! Is that Pikachu? Did we find him?");
+  const lookForPikachuButton = document.createElement("button");
+  lookForPikachuButton.innerText = "Let's go take a look";
+  lookForPikachuButton.style.cssText =
+    "font-size: 16px; padding: 6px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; display: block; background-color: #ffdada; font-weight: bold;";
+  document.body.appendChild(lookForPikachuButton);
+
+  lookForPikachuButton.addEventListener("click", function () {
+    lookForPikachuButton.remove();
+    document.body.style.backgroundImage =
+      "url(./assets/knut-no-tail-background.png)";
+    document.body.style.backgroundSize = "cover";
+
+    chosenPokemonPicture.src = chosenPokemon.pictureBack;
+    chosenPokemonPicture.style.cssText =
+      "position: absolute; bottom: -20px; left: 450px; height: 200px;";
+    document.body.appendChild(chosenPokemonPicture);
+
+    pokemonToBattlePicture.src = "assets/knut.gif";
+    pokemonToBattlePicture.style.cssText =
+      "position: absolute; bottom: 60px; left: 700px; height: 200px";
+    document.body.appendChild(pokemonToBattlePicture);
+
+    createTextBox(
+      `Oh oh.....this is not Pikachu! This is Knut! We need to fight him!`
+    );
+
+    document.body.appendChild(fightButton);
+  });
+}
 //Funksjon som henter pokemon fra API basert på navn og om det er en valgbar pokemon/motstander
 async function getPokemonFromAPI(pokemonName, yourPokemon) {
   try {
@@ -458,4 +491,5 @@ function resetGame() {
   userName = "";
   pokemonsYouCanChoose = [];
   chosenPokemon = {};
+  progress = 0;
 }
