@@ -137,6 +137,7 @@ function readyToPlay() {
 //Funksjon etter pil-klikk som tar spiller til neste nivå
 function nextLevel() {
   progress++;
+  pokemonToBattle = {};
   chosenPokemonPicture.src = chosenPokemon.pictureBack;
 
   //Beveger pokemon mot høyre (chatGpt)
@@ -229,6 +230,27 @@ function knutLevel() {
     "font-size: 16px; padding: 6px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; display: block; background-color: #ffdada; font-weight: bold;";
   document.body.appendChild(lookForPikachuButton);
 
+  pokemonToBattle = {
+    name: "Knut",
+    type: "bug",
+    picture: "assets/knut.gif",
+    pictureBack: "",
+    hp: 100,
+    attack: 0,
+    defense: 100,
+    maxHp: 100,
+    moves: [
+      { name: "blinked slowly", power: 0 },
+      { name: "jumped", power: 0 },
+      { name: "scratched his head", power: 0 },
+      { name: "looked confused", power: 0 },
+      { name: "tilted his head", power: 0 },
+      { name: "started laughing", power: 0 },
+      { name: "rubbed his belly", power: 0 },
+
+    ],
+  };
+
   lookForPikachuButton.addEventListener("click", function () {
     lookForPikachuButton.remove();
     document.body.style.backgroundImage =
@@ -240,7 +262,7 @@ function knutLevel() {
       "position: absolute; bottom: -20px; left: 450px; height: 200px;";
     document.body.appendChild(chosenPokemonPicture);
 
-    pokemonToBattlePicture.src = "assets/knut.gif";
+    pokemonToBattlePicture.src = pokemonToBattle.picture;
     pokemonToBattlePicture.style.cssText =
       "position: absolute; bottom: 60px; left: 700px; height: 200px";
     document.body.appendChild(pokemonToBattlePicture);
@@ -248,7 +270,7 @@ function knutLevel() {
     createTextBox(
       `Oh oh.....this is not Pikachu! This is Knut! We need to fight him!`
     );
-
+    console.log(pokemonToBattle.moves);
     document.body.appendChild(fightButton);
   });
 }
@@ -455,11 +477,18 @@ async function attackFromOpponent() {
     Math.random() * pokemonToBattle.moves.length
   );
   try {
-    pokemonToBattleMoveRequest = await fetch(
-      `https://pokeapi.co/api/v2/move/${pokemonToBattle.moves[randomAttackMoveIndex].move.name}`
-    );
-    const pokemonMoveData = await pokemonToBattleMoveRequest.json();
+    let pokemonMoveData = {};
+    if (pokemonToBattle.name == "Knut") {
+      pokemonMoveData = pokemonToBattle.moves[randomAttackMoveIndex];
+    } else {
+      pokemonToBattleMoveRequest = await fetch(
+        `https://pokeapi.co/api/v2/move/${pokemonToBattle.moves[randomAttackMoveIndex].move.name}`
+      );
+      pokemonMoveData = await pokemonToBattleMoveRequest.json();
+    }
+
     const pokemonToBattleMovePower = pokemonMoveData.power;
+
     const damage = calculateAttackDamage(
       pokemonToBattle.attack,
       pokemonToBattleMovePower,
@@ -467,10 +496,15 @@ async function attackFromOpponent() {
     );
     chosenPokemon.hp = Math.max(chosenPokemon.hp - damage, 0);
     updateStats();
-    createTextBox(
-      `Oh no! ${pokemonToBattle.name} did ${pokemonMoveData.name} on ${chosenPokemon.name}!`
-    );
-
+    if (pokemonToBattle.name == "Knut") {
+      createTextBox(
+        `Hmm.. ${pokemonToBattle.name} ${pokemonMoveData.name}`
+      );
+    } else {
+      createTextBox(
+        `Oh no! ${pokemonToBattle.name} did ${pokemonMoveData.name} on ${chosenPokemon.name}!`
+      );
+    }
     if (chosenPokemon.hp <= 0) {
       setTimeout(function () {
         alert(
