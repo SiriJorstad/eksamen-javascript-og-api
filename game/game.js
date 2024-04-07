@@ -11,6 +11,8 @@ const levels = [
   woodLevel,
   jungleLevel,
   knutLevel,
+  pikachuLevel,
+  theEnd,
 ];
 levels[0]();
 
@@ -235,10 +237,10 @@ function knutLevel() {
     type: "bug",
     picture: "assets/knut.gif",
     pictureBack: "",
-    hp: 100,
+    hp: 50,
     attack: 0,
     defense: 100,
-    maxHp: 100,
+    maxHp: 50,
     moves: [
       { name: "blinked slowly", power: 0 },
       { name: "jumped", power: 0 },
@@ -247,7 +249,6 @@ function knutLevel() {
       { name: "tilted his head", power: 0 },
       { name: "started laughing", power: 0 },
       { name: "rubbed his belly", power: 0 },
-
     ],
   };
 
@@ -270,9 +271,43 @@ function knutLevel() {
     createTextBox(
       `Oh oh.....this is not Pikachu! This is Knut! We need to fight him!`
     );
-    console.log(pokemonToBattle.moves);
     document.body.appendChild(fightButton);
   });
+}
+
+async function pikachuLevel() {
+  document.body.style.backgroundImage = "url(./assets/pikachu-background.png)";
+  document.body.style.backgroundSize = "cover";
+
+  chosenPokemonPicture.src = chosenPokemon.pictureBack;
+  chosenPokemonPicture.style.cssText =
+    "position: absolute; bottom: 200px; left: 450px; height: 200px;";
+  document.body.appendChild(chosenPokemonPicture);
+  await getPokemonFromAPI("snorlax", false);
+
+  pokemonToBattlePicture.src = pokemonToBattle.picture;
+  pokemonToBattlePicture.style.cssText =
+    "position: absolute; bottom: 220px; left: 700px; height: 200px";
+  document.body.appendChild(pokemonToBattlePicture);
+
+  createTextBox(
+    `Look it's the real Pikachu!! But a wild ${
+      pokemonToBattle.name
+    } is blocking the way..! Show us what you got, ${
+      chosenPokemon.name.charAt(0).toUpperCase() + chosenPokemon.name.slice(1)
+    }!`
+  );
+  document.body.appendChild(fightButton);
+  fightButton.addEventListener("click", function () {
+    createStatBoxes();
+    showMoves();
+    fightButton.remove();
+  });
+}
+
+function theEnd() {
+  document.body.style.backgroundImage = "url(./assets/knut.gif)";
+  document.body.style.backgroundSize = "cover";
 }
 //Funksjon som henter pokemon fra API basert på navn og om det er en valgbar pokemon/motstander
 async function getPokemonFromAPI(pokemonName, yourPokemon) {
@@ -497,9 +532,7 @@ async function attackFromOpponent() {
     chosenPokemon.hp = Math.max(chosenPokemon.hp - damage, 0);
     updateStats();
     if (pokemonToBattle.name == "Knut") {
-      createTextBox(
-        `Hmm.. ${pokemonToBattle.name} ${pokemonMoveData.name}`
-      );
+      createTextBox(`Hmm.. ${pokemonToBattle.name} ${pokemonMoveData.name}`);
     } else {
       createTextBox(
         `Oh no! ${pokemonToBattle.name} did ${pokemonMoveData.name} on ${chosenPokemon.name}!`
