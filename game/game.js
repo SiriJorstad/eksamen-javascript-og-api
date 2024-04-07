@@ -7,7 +7,7 @@ let userName = "";
 let progress = "";
 
 //Pokemons spilleren kan velge fra
-const pokemonsYouCanChoose = [];
+let pokemonsYouCanChoose = [];
 
 //Pokemon valgt av spiller
 let chosenPokemon = {};
@@ -102,6 +102,13 @@ async function pickYourPokemon() {
   });
 }
 
+//Pil button
+const arrowPicture = document.createElement("img");
+arrowPicture.src = "assets/arrow.png";
+arrowPicture.style.cssText =
+  "height: 200px; position: absolute; right: 200px; bottom: 20px;";
+
+// readyToPlay
 function readyToPlay() {
   document.body.style.backgroundImage =
     "url(./assets/background-without-ash.png)";
@@ -111,11 +118,6 @@ function readyToPlay() {
   chosenPokemonPicture.style.cssText =
     "position: absolute; bottom: 0px; left: 600px; height: 200px";
 
-  const arrowPicture = document.createElement("img");
-  arrowPicture.src = "assets/arrow.png";
-  arrowPicture.style.cssText =
-    "height: 200px; position: absolute; right: 200px; bottom: 20px;";
-
   //charAt for å få stor forbokstav(Stack Overflow)
   createTextBox(
     `Good choice, ${userName}! ${
@@ -124,7 +126,8 @@ function readyToPlay() {
   );
 
   //Ved klikk på pil. Funksjon som beveger pokemon (chatGpt)
-  arrowPicture.addEventListener("click", function () {
+  arrowPicture.addEventListener("click", function arrowClick() {
+    arrowPicture.removeEventListener("click", arrowClick);
     chosenPokemonPicture.src = chosenPokemon.pictureBack;
 
     let position = parseInt(chosenPokemonPicture.style.left) || 0;
@@ -147,21 +150,32 @@ function readyToPlay() {
   document.body.appendChild(arrowPicture);
 }
 
+//Bilde av pokemon og motstander variabler
+const chosenPokemonPicture = document.createElement("img");
+chosenPokemonPicture.style.cssText = "height: 200px";
+
+const pokemonToBattlePicture = document.createElement("img");
+pokemonToBattlePicture.style.cssText = "height: 200px";
+
+//Fightbutton
+const fightButton = document.createElement("button");
+fightButton.style.cssText =
+  "font-size: 25px; padding: 10px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; display: block; background-color: #ffc425;";
+
+// woodLevel
 async function woodLevel() {
   document.body.style.backgroundImage = "url(./assets/wood-background.png)";
   document.body.style.backgroundSize = "cover";
 
-  const chosenPokemonPicture = document.createElement("img");
   chosenPokemonPicture.src = chosenPokemon.pictureBack;
   chosenPokemonPicture.style.cssText =
-    "position: absolute; bottom: -20px; left: 450px; height: 200px";
+    "position: absolute; bottom: -20px; left: 450px;";
   document.body.appendChild(chosenPokemonPicture);
   await getPokemonFromAPI("pidgey", false);
 
-  const pokemonToBattlePicture = document.createElement("img");
   pokemonToBattlePicture.src = pokemonToBattle.picture;
   pokemonToBattlePicture.style.cssText =
-    "position: absolute; bottom: 0; left: 700px; height: 200px";
+    "position: absolute; bottom: 0; left: 700px;";
   document.body.appendChild(pokemonToBattlePicture);
 
   createTextBox(
@@ -169,10 +183,6 @@ async function woodLevel() {
       chosenPokemon.name.charAt(0).toUpperCase() + chosenPokemon.name.slice(1)
     } can fight him so we can continue our search for Pikachu!`
   );
-
-  const fightButton = document.createElement("button");
-  fightButton.style.cssText =
-    "font-size: 25px; padding: 10px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; display: block; background-color: #ffc425;";
 
   fightButton.textContent = "Fight!";
   document.body.appendChild(fightButton);
@@ -182,6 +192,26 @@ async function woodLevel() {
     showMoves();
     fightButton.remove();
   });
+}
+
+async function jungleLevel() {
+  document.body.style.backgroundImage = "url(./assets/jungle-background.jpg)";
+  document.body.style.backgroundSize = "cover";
+
+  chosenPokemonPicture.src = chosenPokemon.pictureBack;
+  chosenPokemonPicture.style.cssText =
+    "position: absolute; bottom: 0; left: 550px; height: 200px";
+  document.body.appendChild(chosenPokemonPicture);
+
+  await getPokemonFromAPI("rattata", false);
+  pokemonToBattlePicture.src = pokemonToBattle.picture;
+  pokemonToBattlePicture.style.cssText =
+    "position: absolute; bottom: 0; left: 700px; height: 200px";
+  document.body.appendChild(pokemonToBattlePicture);
+
+  createTextBox(
+    `An angry ${pokemonToBattle.name} is in the way! Let's fight him!`
+  );
 }
 
 //Funksjon som henter pokemon fra API basert på navn og om det er en valgbar pokemon/motstander
@@ -252,18 +282,21 @@ function createTextBox(text) {
   }
 }
 
-//Funksjon som lager stat-oversikt under battle
+//Lager stat-oversikt under battle
 const yourPokemonStatTxt = document.createElement("p");
 const healthBarYourPokemon = document.createElement("div");
 
 const opponentPokemonStatTxt = document.createElement("p");
 const healthBarOpponentPokemon = document.createElement("div");
 
+const yourPokemonStatDiv = document.createElement("div");
+yourPokemonStatDiv.style.cssText =
+  "background: #ffc426; width: 100px; padding: 15px; border-radius: 5px; border: 1px solid black; position: absolute; left: 250px; bottom: 300px";
+const opponentPokemonStatDiv = document.createElement("div");
+opponentPokemonStatDiv.style.cssText =
+  "background: #ffc426; width: 100px; padding: 15px; border-radius: 5px; border: 1px solid black; position: absolute; right: 250px; bottom: 300px;";
 function createStatBoxes() {
   //Din pokemon
-  const yourPokemoStatDiv = document.createElement("div");
-  yourPokemoStatDiv.style.cssText =
-    "background: #ffc426; width: 100px; padding: 15px; border-radius: 5px; border: 1px solid black; position: absolute; left: 250px; bottom: 300px";
   yourPokemonStatTxt.innerText = `${chosenPokemon.name.toUpperCase()} HP: ${
     chosenPokemon.hp
   } / ${chosenPokemon.maxHp}`;
@@ -275,9 +308,6 @@ function createStatBoxes() {
     (100 * chosenPokemon.hp) / chosenPokemon.maxHp
   }px; background:  green; height: 20px`;
   //Din motstander
-  const opponentPokemonStatDiv = document.createElement("div");
-  opponentPokemonStatDiv.style.cssText =
-    "background: #ffc426; width: 100px; padding: 15px; border-radius: 5px; border: 1px solid black; position: absolute; right: 250px; bottom: 300px;";
   opponentPokemonStatTxt.innerText = `${pokemonToBattle.name.toUpperCase()} HP: ${
     pokemonToBattle.hp
   } / ${pokemonToBattle.maxHp}`;
@@ -289,10 +319,10 @@ function createStatBoxes() {
     (100 * pokemonToBattle.hp) / pokemonToBattle.maxHp
   }px; background:  green; height: 20px`;
 
-  document.body.appendChild(yourPokemoStatDiv);
+  document.body.appendChild(yourPokemonStatDiv);
   document.body.appendChild(opponentPokemonStatDiv);
-  yourPokemoStatDiv.appendChild(yourPokemonStatTxt);
-  yourPokemoStatDiv.appendChild(maxHealthBarYourPokemon);
+  yourPokemonStatDiv.appendChild(yourPokemonStatTxt);
+  yourPokemonStatDiv.appendChild(maxHealthBarYourPokemon);
   maxHealthBarYourPokemon.appendChild(healthBarYourPokemon);
   opponentPokemonStatDiv.appendChild(opponentPokemonStatTxt);
   opponentPokemonStatDiv.appendChild(maxHealthBarOpponentPokemon);
@@ -336,15 +366,45 @@ function showMoves() {
       );
       pokemonToBattle.hp = Math.max(pokemonToBattle.hp - damage, 0);
       updateStats();
-      const text = `${chosenPokemon.name} did ${move.name} on ${pokemonToBattle.name}!`;
-      createTextBox(text);
+      createTextBox(
+        `${chosenPokemon.name} did ${move.name} on ${pokemonToBattle.name}!`
+      );
+
       setTimeout(function () {
-        attackFromOpponent();
-        setTimeout(function () {
-          if (chosenPokemon.hp > 0) {
-            moveButton.style.display = "block";
-          }
-        }, 2000);
+        //Hvis motstander har 0 i HP
+        if (pokemonToBattle.hp <= 0) {
+          document.body.appendChild(arrowPicture);
+          yourPokemonStatDiv.remove();
+          opponentPokemonStatDiv.remove();
+          pokemonToBattlePicture.remove();
+          createTextBox(
+            `Yey! ${chosenPokemon.name} won the battle against ${pokemonToBattle.name}! Let's continue the search for Pikachu.`
+          );
+
+          arrowPicture.addEventListener("click", function () {
+            let position = parseInt(chosenPokemonPicture.style.left) || 0;
+            const endPosition = window.innerWidth - 200;
+
+            const moveInterval = setInterval(function () {
+              position += 15;
+              chosenPokemonPicture.style.left = position + "px"; //
+
+              if (position >= endPosition) {
+                clearInterval(moveInterval);
+                chosenPokemonPicture.remove();
+                resetHTML();
+                jungleLevel();
+              }
+            }, 100);
+          });
+        } else {
+          attackFromOpponent();
+          setTimeout(function () {
+            if (chosenPokemon.hp > 0) {
+              moveButton.style.display = "block";
+            }
+          }, 2000);
+        }
       }, 4000);
     });
   });
@@ -378,8 +438,9 @@ async function attackFromOpponent() {
     );
     chosenPokemon.hp = Math.max(chosenPokemon.hp - damage, 0);
     updateStats();
-    const text = `Oh no! ${pokemonToBattle.name} did ${pokemonMoveData.name} on ${chosenPokemon.name}!`;
-    createTextBox(text);
+    createTextBox(
+      `Oh no! ${pokemonToBattle.name} did ${pokemonMoveData.name} on ${chosenPokemon.name}!`
+    );
 
     if (chosenPokemon.hp <= 0) {
       setTimeout(function () {
@@ -387,10 +448,18 @@ async function attackFromOpponent() {
           `Sorry, ${userName}! ${chosenPokemon.name} lost the battle. Try again to find Pikachu!`
         );
         resetHTML();
+        resetGame();
         welcomePage();
       }, 2000);
     }
   } catch (error) {
     console.log("Couldn't catch 'em all. Please try again. ", error);
   }
+}
+
+//Funksjon som resetter spillet
+function resetGame() {
+  userName = "";
+  pokemonsYouCanChoose = [];
+  chosenPokemon = {};
 }
