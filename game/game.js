@@ -78,7 +78,7 @@ async function pickYourPokemon() {
   pickYourPokemonContainer.appendChild(pickYourPokemonTxt);
 
   await getPokemonFromAPI("bulbasaur", true);
-  await getPokemonFromAPI("charmander", true);
+  await getPokemonFromAPI("charizard", true);
   await getPokemonFromAPI("squirtle", true);
 
   pokemonsYouCanChoose.forEach((pokemon) => {
@@ -229,7 +229,7 @@ function knutLevel() {
   const lookForPikachuButton = document.createElement("button");
   lookForPikachuButton.innerText = "Let's go take a look";
   lookForPikachuButton.style.cssText =
-    "font-size: 16px; padding: 6px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; display: block; background-color: #ffdada; font-weight: bold;";
+    "font-size: 20px; padding: 6px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; display: block; background-color: #ffc103; font-weight: bold;";
   document.body.appendChild(lookForPikachuButton);
 
   pokemonToBattle = {
@@ -243,12 +243,13 @@ function knutLevel() {
     maxHp: 50,
     moves: [
       { name: "blinked slowly", power: 0 },
-      { name: "jumped", power: 0 },
+      { name: "jumped up and down", power: 0 },
       { name: "scratched his head", power: 0 },
       { name: "looked confused", power: 0 },
       { name: "tilted his head", power: 0 },
       { name: "started laughing", power: 0 },
       { name: "rubbed his belly", power: 0 },
+      { name: "ran in a circle", power: 0 },
     ],
   };
 
@@ -283,7 +284,7 @@ async function pikachuLevel() {
   chosenPokemonPicture.style.cssText =
     "position: absolute; bottom: 200px; left: 450px; height: 200px;";
   document.body.appendChild(chosenPokemonPicture);
-  await getPokemonFromAPI("snorlax", false);
+  await getPokemonFromAPI("metapod", false);
 
   pokemonToBattlePicture.src = pokemonToBattle.picture;
   pokemonToBattlePicture.style.cssText =
@@ -306,8 +307,21 @@ async function pikachuLevel() {
 }
 
 function theEnd() {
-  document.body.style.backgroundImage = "url(./assets/knut.gif)";
+  document.body.style.backgroundImage = "url(./assets/the-end.png)";
   document.body.style.backgroundSize = "cover";
+
+  createTextBox(
+    `You did it, ${userName}! Thank you for helping Ash find Pikachu!`
+  );
+  const playAgainButton = document.createElement("button");
+  playAgainButton.style.cssText = playAgainButton.style.cssText =
+    "font-size: 10px; padding: 10px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; display: block; background-color: white;";
+  playAgainButton.innerText = "Do you want to play again?";
+  playAgainButton.addEventListener("click", function () {
+    resetGame();
+  });
+
+  document.body.appendChild(playAgainButton);
 }
 //Funksjon som henter pokemon fra API basert på navn og om det er en valgbar pokemon/motstander
 async function getPokemonFromAPI(pokemonName, yourPokemon) {
@@ -477,9 +491,13 @@ function showMoves() {
             yourPokemonStatDiv.remove();
             opponentPokemonStatDiv.remove();
             pokemonToBattlePicture.remove();
-            createTextBox(
-              `Yey! ${chosenPokemon.name} won the battle against ${pokemonToBattle.name}! Let's continue the search for Pikachu.`
-            );
+            if (progress == 6) {
+              createTextBox(`Hurray! ${chosenPokemon.name} did it!`);
+            } else {
+              createTextBox(
+                `Yey! ${chosenPokemon.name} won the battle against ${pokemonToBattle.name}! Let's continue the search for Pikachu.`
+              );
+            }
 
             arrowPicture.addEventListener("click", nextLevel);
           } else {
@@ -543,9 +561,7 @@ async function attackFromOpponent() {
         alert(
           `Sorry, ${userName}! ${chosenPokemon.name} lost the battle. Try again to find Pikachu!`
         );
-        resetHTML();
         resetGame();
-        welcomePage();
       }, 2000);
     }
   } catch (error) {
@@ -555,8 +571,10 @@ async function attackFromOpponent() {
 
 //Funksjon som resetter spillet
 function resetGame() {
+  resetHTML();
   userName = "";
   pokemonsYouCanChoose = [];
   chosenPokemon = {};
   progress = 0;
+  welcomePage();
 }
