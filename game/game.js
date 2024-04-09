@@ -28,8 +28,8 @@ let pokemonToBattle = {};
 //De forskjellige sidene/funksjonene som vises
 function welcomePage() {
   //Bakgrunn velkomstside
-  document.body.style.backgroundImage = "url(./assets/first-background.png)";
-  document.body.style.backgroundSize = "cover";
+  document.body.style.cssText =
+    "background-image: url(./assets/first-background.png); background-size: cover;";
 
   //Velkomsttekst
   const welcomeToGameText = document.createElement("h2");
@@ -65,9 +65,8 @@ function welcomePage() {
 }
 
 async function pickYourPokemon() {
-  document.body.style.backgroundImage =
-    "url(./assets/background-without-ash.png)";
-  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundImage = document.body.style.cssText =
+    "background-image: url(./assets/background-without-ash.png); background-size: cover;";
 
   const pickYourPokemonContainer = document.createElement("div");
   pickYourPokemonContainer.style.cssText =
@@ -78,7 +77,7 @@ async function pickYourPokemon() {
   pickYourPokemonContainer.appendChild(pickYourPokemonTxt);
 
   await getPokemonFromAPI("bulbasaur", true);
-  await getPokemonFromAPI("charizard", true);
+  await getPokemonFromAPI("charmander", true);
   await getPokemonFromAPI("squirtle", true);
 
   pokemonsYouCanChoose.forEach((pokemon) => {
@@ -117,13 +116,12 @@ const pokemonToBattlePicture = document.createElement("img");
 
 // readyToPlay
 function readyToPlay() {
-  document.body.style.backgroundImage =
-    "url(./assets/background-without-ash.png)";
-  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundImage = document.body.style.cssText =
+    "background-image: url(./assets/background-without-ash.png); background-size: cover;";
 
   chosenPokemonPicture.src = chosenPokemon.picture;
   chosenPokemonPicture.style.cssText =
-    "position: absolute; bottom: 0px; left: 600px; height: 200px";
+    "position: absolute; bottom: 60px; left: 650px; height: 100px";
 
   //charAt for å få stor forbokstav(Stack Overflow)
   createTextBox(
@@ -165,18 +163,18 @@ fightButton.textContent = "Fight!";
 
 // woodLevel
 async function woodLevel() {
-  document.body.style.backgroundImage = "url(./assets/wood-background.png)";
-  document.body.style.backgroundSize = "cover";
+  document.body.style.cssText =
+    "background-image: url(./assets/wood-background.png); background-size: cover;";
 
   chosenPokemonPicture.src = chosenPokemon.pictureBack;
   chosenPokemonPicture.style.cssText =
-    "position: absolute; bottom: -20px; left: 450px; height: 200px;";
+    "position: absolute; bottom: 20px; left: 480px; height: 100px;";
   document.body.appendChild(chosenPokemonPicture);
   await getPokemonFromAPI("pidgey", false);
 
   pokemonToBattlePicture.src = pokemonToBattle.picture;
   pokemonToBattlePicture.style.cssText =
-    "position: absolute; bottom: 0; left: 700px; height: 200px";
+    "position: absolute; bottom: 50px; left: 700px; height: 100px";
   document.body.appendChild(pokemonToBattlePicture);
 
   createTextBox(
@@ -195,18 +193,18 @@ async function woodLevel() {
 }
 
 async function jungleLevel() {
-  document.body.style.backgroundImage = "url(./assets/jungle-background.jpg)";
-  document.body.style.backgroundSize = "cover";
+  document.body.style.cssText =
+    "background-image: url(./assets/jungle-background.jpg); background-size: cover;";
 
   chosenPokemonPicture.src = chosenPokemon.pictureBack;
   chosenPokemonPicture.style.cssText =
-    "position: absolute; bottom: 0; left: 550px; height: 200px";
+    "position: absolute; bottom: 60px; left: 550px; height: 100px";
   document.body.appendChild(chosenPokemonPicture);
 
   await getPokemonFromAPI("rattata", false);
   pokemonToBattlePicture.src = pokemonToBattle.picture;
   pokemonToBattlePicture.style.cssText =
-    "position: absolute; bottom: 0; left: 700px; height: 200px";
+    "position: absolute; bottom: 100px; left: 700px; height: 100px";
   document.body.appendChild(pokemonToBattlePicture);
 
   createTextBox(
@@ -222,8 +220,8 @@ async function jungleLevel() {
 }
 
 function knutLevel() {
-  document.body.style.backgroundImage = "url(./assets/knut-background.png)";
-  document.body.style.backgroundSize = "cover";
+  document.body.style.cssText =
+    "background-image: url(./assets/knut-background.png); background-size: cover;";
 
   createTextBox("Oh look over there! Is that Pikachu? Did we find him?");
   const lookForPikachuButton = document.createElement("button");
@@ -255,18 +253,17 @@ function knutLevel() {
 
   lookForPikachuButton.addEventListener("click", function () {
     lookForPikachuButton.remove();
-    document.body.style.backgroundImage =
-      "url(./assets/knut-no-tail-background.png)";
-    document.body.style.backgroundSize = "cover";
+    document.body.style.cssText =
+      "background-image: url(./assets/knut-no-tail-background.png); background-size: cover;";
 
     chosenPokemonPicture.src = chosenPokemon.pictureBack;
     chosenPokemonPicture.style.cssText =
-      "position: absolute; bottom: -20px; left: 450px; height: 200px;";
+      "position: absolute; bottom: 80px; left: 470px; height: 100px;";
     document.body.appendChild(chosenPokemonPicture);
 
     pokemonToBattlePicture.src = pokemonToBattle.picture;
     pokemonToBattlePicture.style.cssText =
-      "position: absolute; bottom: 60px; left: 700px; height: 200px";
+      "position: absolute; bottom: 90px; left: 660px; height: 150px";
     document.body.appendChild(pokemonToBattlePicture);
 
     createTextBox(
@@ -277,18 +274,18 @@ function knutLevel() {
 }
 
 async function pikachuLevel() {
-  document.body.style.backgroundImage = "url(./assets/pikachu-background.png)";
-  document.body.style.backgroundSize = "cover";
+  document.body.style.cssText =
+    "background-image: url(./assets/pikachu-background.png); background-size: cover;";
 
   chosenPokemonPicture.src = chosenPokemon.pictureBack;
   chosenPokemonPicture.style.cssText =
-    "position: absolute; bottom: 200px; left: 450px; height: 200px;";
+    "position: absolute; bottom: 240px; left: 560px; height: 100px;";
   document.body.appendChild(chosenPokemonPicture);
   await getPokemonFromAPI("metapod", false);
 
   pokemonToBattlePicture.src = pokemonToBattle.picture;
   pokemonToBattlePicture.style.cssText =
-    "position: absolute; bottom: 220px; left: 700px; height: 200px";
+    "position: absolute; bottom: 260px; left: 740px; height: 100px";
   document.body.appendChild(pokemonToBattlePicture);
 
   createTextBox(
@@ -307,8 +304,8 @@ async function pikachuLevel() {
 }
 
 function theEnd() {
-  document.body.style.backgroundImage = "url(./assets/the-end.png)";
-  document.body.style.backgroundSize = "cover";
+  document.body.style.cssText =
+    "background-image: url(./assets/the-end.png); background-size: cover; padding-top: 100px;";
 
   createTextBox(
     `You did it, ${userName}! Thank you for helping Ash find Pikachu!`
@@ -343,8 +340,8 @@ async function getPokemonFromAPI(pokemonName, yourPokemon) {
     const pokemon = {
       name: pokemonData.name,
       type: pokemonData.types[0].type.name,
-      picture: pokemonData.sprites.front_default,
-      pictureBack: pokemonData.sprites.back_default,
+      picture: pokemonData.sprites.other.showdown.front_default,
+      pictureBack: pokemonData.sprites.other.showdown.back_default,
       hp: hp,
       attack: attack,
       defense: defense,
@@ -550,7 +547,7 @@ async function attackFromOpponent() {
     chosenPokemon.hp = Math.max(chosenPokemon.hp - damage, 0);
     updateStats();
     if (pokemonToBattle.name == "Knut") {
-      createTextBox(`Hmm.. ${pokemonToBattle.name} ${pokemonMoveData.name}`);
+      createTextBox(`${pokemonToBattle.name} ${pokemonMoveData.name}`);
     } else {
       createTextBox(
         `Oh no! ${pokemonToBattle.name} did ${pokemonMoveData.name} on ${chosenPokemon.name}!`
