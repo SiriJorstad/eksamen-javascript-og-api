@@ -9,9 +9,9 @@ const levels = [
   pickYourPokemon,
   readyToPlay,
   woodLevel,
-  jungleLevel,
-  knutLevel,
-  pikachuLevel,
+  //   jungleLevel,
+  //   knutLevel,
+  //   pikachuLevel,
   theEnd,
 ];
 levels[0]();
@@ -349,22 +349,58 @@ async function getPokemonFromAPI(pokemonName, yourPokemon) {
       moves: [],
     };
 
-    if (yourPokemon == true) {
-      pokemonMoveRequest = await fetch(
-        `https://pokeapi.co/api/v2/move/tackle/`
-      );
-      const pokemonMoveData = await pokemonMoveRequest.json();
-      pokemon.moves.push(pokemonMoveData);
-      pokemonsYouCanChoose.push(pokemon);
-    } else {
-      const pokemonToBattleMoves = pokemonData.moves.filter(
-        (move) => move.version_group_details[0].level_learned_at == 0
-      );
-      pokemon.moves = pokemonToBattleMoves;
-      pokemonToBattle = pokemon;
+    try {
+      if (yourPokemon == true) {
+        if (pokemon.name == "charmander") {
+          const charmanderMovesToFetch = [
+            "dragon-breath",
+            "fire-punch",
+            "fire-spin",
+          ];
+          for (const move of charmanderMovesToFetch) {
+            const pokemonMoveRequest = await fetch(
+              `https://pokeapi.co/api/v2/move/${move}/`
+            );
+            const pokemonMoveData = await pokemonMoveRequest.json();
+            pokemon.moves.push(pokemonMoveData);
+          }
+        }
+
+        if (pokemon.name == "bulbasaur") {
+          const bulbasaurMovesToFetch = ["razor-leaf", "seed-bomb", "tackle"];
+          for (const move of bulbasaurMovesToFetch) {
+            const pokemonMoveRequest = await fetch(
+              `https://pokeapi.co/api/v2/move/${move}/`
+            );
+            const pokemonMoveData = await pokemonMoveRequest.json();
+            pokemon.moves.push(pokemonMoveData);
+          }
+        }
+
+        if (pokemon.name == "squirtle") {
+          const squirtleMovesToFetch = ["water-pulse", "rapid-spin", "bite"];
+          for (const move of squirtleMovesToFetch) {
+            const pokemonMoveRequest = await fetch(
+              `https://pokeapi.co/api/v2/move/${move}/`
+            );
+            const pokemonMoveData = await pokemonMoveRequest.json();
+            pokemon.moves.push(pokemonMoveData);
+          }
+        }
+
+        pokemonsYouCanChoose.push(pokemon);
+      } else {
+        const pokemonToBattleMoves = pokemonData.moves.filter(
+          (move) => move.version_group_details[0].level_learned_at == 0
+        );
+        pokemon.moves = pokemonToBattleMoves;
+        pokemonToBattle = pokemon;
+      }
+    } catch (error) {
+      console.log("Couldn't catch 'em all. Please try again. ", error);
     }
   } catch (error) {
-    console.log("Couldn't catch 'em all. Please try again. ", error);
+    console.log("Error fetching Pokemon data. Please try again. ", error);
   }
 }
 
@@ -456,20 +492,27 @@ function updateStats() {
 }
 
 //Funksjon som viser mulige moves i battle
+const moveContainer = document.createElement("div");
 function showMoves() {
+  moveContainer.innerHTML = "";
+  moveContainer.style.cssText =
+    "display: flex; gap: 10px; justify-content: center; ";
+  document.body.appendChild(moveContainer);
   chosenPokemon.moves.forEach((move) => {
     if (document.getElementById(move.name)) {
     } else {
       const moveButton = document.createElement("button");
       moveButton.id = move.name;
       moveButton.innerText = move.name.toUpperCase();
+      moveButton.className = "move-button";
       moveButton.style.cssText =
-        "font-size: 20px; padding: 5px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: auto; display: block; background-color: white; margin-top: 100px;";
+        "font-size: 16px; padding: 4px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: 0; display: block; background-color: #ffc426; margin-top: 100px;";
 
-      document.body.appendChild(moveButton);
+      moveContainer.appendChild(moveButton);
 
       moveButton.addEventListener("click", function () {
-        moveButton.style.display = "none";
+        moveContainer.style.display = "none";
+
         const damage = calculateAttackDamage(
           chosenPokemon.attack,
           move.power,
@@ -501,7 +544,7 @@ function showMoves() {
             attackFromOpponent();
             setTimeout(function () {
               if (chosenPokemon.hp > 0) {
-                moveButton.style.display = "block";
+                moveContainer.style.display = "flex";
               }
             }, 2000);
           }
