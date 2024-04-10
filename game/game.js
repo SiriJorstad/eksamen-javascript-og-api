@@ -9,9 +9,9 @@ const levels = [
   pickYourPokemon,
   readyToPlay,
   woodLevel,
-  //   jungleLevel,
-  //   knutLevel,
-  //   pikachuLevel,
+  jungleLevel,
+  knutLevel,
+  pikachuLevel,
   theEnd,
 ];
 levels[0]();
