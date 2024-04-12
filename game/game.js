@@ -281,7 +281,7 @@ async function pikachuLevel() {
   chosenPokemonPicture.style.cssText =
     "position: absolute; bottom: 240px; left: 560px; height: 100px;";
   document.body.appendChild(chosenPokemonPicture);
-  await getPokemonFromAPI("metapod", false);
+  await getPokemonFromAPI("meowth", false);
 
   pokemonToBattlePicture.src = pokemonToBattle.picture;
   pokemonToBattlePicture.style.cssText =
@@ -499,58 +499,54 @@ function showMoves() {
     "display: flex; gap: 10px; justify-content: center; ";
   document.body.appendChild(moveContainer);
   chosenPokemon.moves.forEach((move) => {
-    if (document.getElementById(move.name)) {
-    } else {
-      const moveButton = document.createElement("button");
-      moveButton.id = move.name;
-      moveButton.innerText = move.name.toUpperCase();
-      moveButton.className = "move-button";
-      moveButton.style.cssText =
-        "font-size: 16px; padding: 4px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: 0; display: block; background-color: #ffc426; margin-top: 100px;";
+    const moveButton = document.createElement("button");
+    moveButton.innerText = move.name.toUpperCase();
+    moveButton.className = "move-button";
+    moveButton.style.cssText =
+      "font-size: 16px; padding: 4px; border: 1px solid black; border-radius: 5px; text-align: center; width: 150px; margin: 0; display: block; background-color: #ffc426; margin-top: 100px;";
 
-      moveContainer.appendChild(moveButton);
+    moveContainer.appendChild(moveButton);
 
-      moveButton.addEventListener("click", function () {
-        moveContainer.style.display = "none";
+    moveButton.addEventListener("click", function () {
+      moveContainer.style.display = "none";
 
-        const damage = calculateAttackDamage(
-          chosenPokemon.attack,
-          move.power,
-          pokemonToBattle.defense
-        );
-        pokemonToBattle.hp = Math.max(pokemonToBattle.hp - damage, 0);
-        updateStats();
-        createTextBox(
-          `${chosenPokemon.name} did ${move.name} on ${pokemonToBattle.name}!`
-        );
+      const damage = calculateAttackDamage(
+        chosenPokemon.attack,
+        move.power,
+        pokemonToBattle.defense
+      );
+      pokemonToBattle.hp = Math.max(pokemonToBattle.hp - damage, 0);
+      updateStats();
+      createTextBox(
+        `${chosenPokemon.name} did ${move.name} on ${pokemonToBattle.name}!`
+      );
 
-        setTimeout(function () {
-          //Hvis motstander har 0 i HP
-          if (pokemonToBattle.hp <= 0) {
-            document.body.appendChild(arrowPicture);
-            yourPokemonStatDiv.remove();
-            opponentPokemonStatDiv.remove();
-            pokemonToBattlePicture.remove();
-            if (progress == 6) {
-              createTextBox(`Hurray! ${chosenPokemon.name} did it!`);
-            } else {
-              createTextBox(
-                `Yey! ${chosenPokemon.name} won the battle against ${pokemonToBattle.name}! Let's continue the search for Pikachu.`
-              );
-            }
-
-            arrowPicture.addEventListener("click", nextLevel);
+      setTimeout(function () {
+        //Hvis motstander har 0 i HP
+        if (pokemonToBattle.hp <= 0) {
+          document.body.appendChild(arrowPicture);
+          yourPokemonStatDiv.remove();
+          opponentPokemonStatDiv.remove();
+          pokemonToBattlePicture.remove();
+          if (progress == 6) {
+            createTextBox(`Hurray! ${chosenPokemon.name} did it!`);
           } else {
-            attackFromOpponent();
-            setTimeout(function () {
-              if (chosenPokemon.hp > 0) {
-                moveContainer.style.display = "flex";
-              }
-            }, 2000);
+            createTextBox(
+              `Yey! ${chosenPokemon.name} won the battle against ${pokemonToBattle.name}! Let's continue the search for Pikachu.`
+            );
           }
-        }, 4000);
-      });
-    }
+
+          arrowPicture.addEventListener("click", nextLevel);
+        } else {
+          attackFromOpponent();
+          setTimeout(function () {
+            if (chosenPokemon.hp > 0) {
+              moveContainer.style.display = "flex";
+            }
+          }, 2000);
+        }
+      }, 4000);
+    });
   });
 }
 
